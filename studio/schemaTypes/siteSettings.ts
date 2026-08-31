@@ -7,22 +7,86 @@ export const siteSettings = defineType({
 
   fields: [
     defineField({
-      name: 'title',
+      name: 'organizationName',
       title: 'Organization Name',
       type: 'string',
+      validation: (Rule) => Rule.required(),
     }),
 
     defineField({
-      name: 'tagline',
-      title: 'Tagline',
+      name: 'shortName',
+      title: 'Short Name',
+      type: 'string',
+      description: 'Example: UDC',
+    }),
+
+    defineField({
+      name: 'email',
+      title: 'Email Address',
       type: 'string',
     }),
 
     defineField({
-      name: 'intro',
-      title: 'Intro',
+      name: 'phone',
+      title: 'Phone Number',
+      type: 'string',
+    }),
+
+    defineField({
+      name: 'address',
+      title: 'Mailing Address',
       type: 'text',
-      rows: 4,
+      rows: 3,
+    }),
+
+    defineField({
+      name: 'socialLinks',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'facebook',
+          title: 'Facebook',
+          type: 'url',
+        }),
+        defineField({
+          name: 'instagram',
+          title: 'Instagram',
+          type: 'url',
+        }),
+        defineField({
+          name: 'linkedin',
+          title: 'LinkedIn',
+          type: 'url',
+        }),
+      ],
+    }),
+
+    defineField({
+      name: 'defaultSeo',
+      title: 'Default SEO',
+      type: 'object',
+      fields: [
+        defineField({
+          name: 'title',
+          title: 'Default SEO Title',
+          type: 'string',
+        }),
+        defineField({
+          name: 'description',
+          title: 'Default Meta Description',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'shareImage',
+          title: 'Default Social Share Image',
+          type: 'image',
+          options: {
+            hotspot: true,
+          },
+        }),
+      ],
     }),
   ],
 })

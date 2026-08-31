@@ -1,0 +1,101 @@
+---
+/**
+ * Site header: wordmark plus a small set of in-page anchor links.
+ * This is a single-page site, so navigation points at landing-page sections
+ * rather than separate routes. Kept deliberately simple — no dropdowns,
+ * no client-side JS.
+ */
+interface Props {
+  settings?: {
+    organizationName?: string
+    shortName?: string
+  } | null
+}
+
+const { settings } = Astro.props
+const wordmark = settings?.shortName || settings?.organizationName || 'UDC'
+
+const navLinks = [
+  { text: 'What is Universal Design', href: '#what-is-universal-design' },
+  { text: 'Resources', href: '#resources' },
+  { text: 'Partners', href: '#sponsors' },
+  { text: 'Contact', href: '#contact' },
+]
+---
+
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="wordmark" href="#top" aria-label={`${settings?.organizationName ?? 'Home'} — home`}>
+      {wordmark}
+    </a>
+    <nav aria-label="Primary">
+      <ul class="nav-list">
+        {navLinks.map((link) => (
+          <li><a href={link.href}>{link.text}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background-color: color-mix(in srgb, var(--color-background) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-header__inner {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+  }
+
+  .wordmark {
+    font-weight: 700;
+    font-size: var(--text-lg);
+    letter-spacing: -0.02em;
+    color: var(--color-primary-strong);
+    text-decoration: none;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .nav-list a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+  }
+
+  .nav-list a:hover {
+    color: var(--color-primary-strong);
+  }
+
+  /* On small screens the anchor nav wraps below the wordmark rather than
+     forcing a hamburger menu — fewer moving parts, no JS. */
+  @media (max-width: 40rem) {
+    .site-header__inner {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-sm);
+    }
+    .nav-list {
+      gap: var(--space-sm) var(--space-md);
+    }
+  }
+</style>

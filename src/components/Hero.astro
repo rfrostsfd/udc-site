@@ -1,0 +1,106 @@
+---
+/**
+ * Landing-page hero. Leads with the benefit ("Design for life, not just for
+ * today.") before any technical definition. Image is optional; without one the
+ * hero collapses to a single, confident text column.
+ */
+import { urlFor } from '../lib/sanity'
+import CTA from './CTA.astro'
+
+interface Props {
+  hero?: {
+    eyebrow?: string
+    heading?: string
+    subheading?: string
+    image?: any
+    primaryCta?: { text?: string; link?: string }
+    secondaryCta?: { text?: string; link?: string }
+  } | null
+}
+
+const { hero } = Astro.props
+const heading = hero?.heading ?? 'Design for life, not just for today.'
+
+const imageUrl = hero?.image
+  ? urlFor(hero.image).width(1400).height(1050).fit('crop').auto('format').url()
+  : null
+// Alt text may be authored on the image object; fall back to empty (decorative).
+const imageAlt = hero?.image?.alt ?? ''
+---
+
+<section class="hero" class:list={[imageUrl && 'hero--with-image']}>
+  <div class="hero__text">
+    {hero?.eyebrow && <p class="hero__eyebrow">{hero.eyebrow}</p>}
+    <h1>{heading}</h1>
+    {hero?.subheading && <p class="hero__subheading">{hero.subheading}</p>}
+
+    {(hero?.primaryCta?.text || hero?.secondaryCta?.text) && (
+      <div class="hero__actions">
+        <CTA text={hero?.primaryCta?.text} link={hero?.primaryCta?.link} variant="primary" />
+        <CTA text={hero?.secondaryCta?.text} link={hero?.secondaryCta?.link} variant="secondary" />
+      </div>
+    )}
+  </div>
+
+  {imageUrl && (
+    <div class="hero__media">
+      <img src={imageUrl} alt={imageAlt} width="1400" height="1050" fetchpriority="high" />
+    </div>
+  )}
+</section>
+
+<style>
+  .hero {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-md) var(--space-xl);
+  }
+
+  .hero--with-image {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 60rem) {
+    .hero--with-image {
+      grid-template-columns: 1.05fr 0.95fr;
+    }
+  }
+
+  .hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero h1 {
+    font-size: var(--text-3xl);
+    max-width: 15ch;
+  }
+
+  .hero__subheading {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    max-width: 48ch;
+    margin-top: var(--space-md);
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+  }
+
+  .hero__media img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+    object-fit: cover;
+  }
+</style>

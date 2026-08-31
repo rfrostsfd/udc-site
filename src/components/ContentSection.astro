@@ -1,0 +1,60 @@
+---
+/**
+ * A single editorial section: heading + body prose in a comfortable reading
+ * column. Used for the narrative blocks (What Is Universal Design, Why It
+ * Matters, Who It Helps, Fall Prevention). Renders nothing if there's no
+ * content, so optional CMS sections disappear cleanly.
+ *
+ * `tone="sunken"` gives an alternating background for vertical rhythm.
+ * `body` is a plain multi-line string; blank lines become paragraphs.
+ */
+interface Props {
+  id?: string
+  heading?: string
+  body?: string
+  tone?: 'default' | 'sunken'
+}
+
+const { id, heading, body, tone = 'default' } = Astro.props
+const hasContent = !!(heading || body)
+
+// Split the textarea content on blank lines into paragraphs.
+const paragraphs = (body ?? '')
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean)
+---
+
+{
+  hasContent && (
+    <section id={id} class:list={['section', tone === 'sunken' && 'section--sunken']}>
+      <div class="section__inner">
+        {heading && <h2>{heading}</h2>}
+        <div class="prose">
+          {paragraphs.map((p) => (
+            <p>{p}</p>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .section {
+    padding-block: var(--space-xl);
+  }
+  .section--sunken {
+    background-color: var(--color-surface-sunken);
+  }
+
+  .section__inner {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+
+  .section :global(.prose p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

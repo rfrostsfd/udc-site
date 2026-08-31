@@ -1,0 +1,52 @@
+---
+/**
+ * Heading + short intro paragraph that opens a listing section (Resources,
+ * Partners). Pairs with a grid of cards rendered via <slot />.
+ */
+interface Props {
+  id?: string
+  heading?: string
+  body?: string
+  tone?: 'default' | 'sunken'
+}
+
+const { id, heading, body, tone = 'default' } = Astro.props
+---
+
+<section id={id} class:list={['listing', tone === 'sunken' && 'listing--sunken']}>
+  <div class="listing__inner">
+    {(heading || body) && (
+      <header class="listing__header">
+        {heading && <h2>{heading}</h2>}
+        {body && <p class="listing__intro">{body}</p>}
+      </header>
+    )}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .listing {
+    padding-block: var(--space-xl);
+  }
+  .listing--sunken {
+    background-color: var(--color-surface-sunken);
+  }
+
+  .listing__inner {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+
+  .listing__header {
+    max-width: var(--content-width);
+    margin-bottom: var(--space-lg);
+  }
+
+  .listing__intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+</style>

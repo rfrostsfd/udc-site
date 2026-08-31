@@ -1,0 +1,97 @@
+---
+/**
+ * A single resource: title, short description, category label, and an
+ * external link. The whole card is not a link (to keep the description
+ * selectable and the markup semantic); the title is the primary link.
+ */
+interface Props {
+  resource: {
+    title?: string
+    description?: string
+    category?: string
+    url?: string
+    featured?: boolean
+  }
+}
+
+const { resource } = Astro.props
+
+const CATEGORY_LABELS: Record<string, string> = {
+  'universal-design': 'Universal Design',
+  'fall-prevention': 'Fall Prevention',
+  'home-modification': 'Home Modification',
+  education: 'Education',
+  community: 'Community',
+  other: 'Other',
+}
+
+const categoryLabel = resource.category ? CATEGORY_LABELS[resource.category] : null
+---
+
+<article class:list={['resource-card', resource.featured && 'resource-card--featured']}>
+  {categoryLabel && <p class="resource-card__category">{categoryLabel}</p>}
+  <h3 class="resource-card__title">
+    {resource.url ? (
+      <a href={resource.url} target="_blank" rel="noopener noreferrer">
+        {resource.title}<span class="sr-only"> (opens in a new tab)</span>
+      </a>
+    ) : (
+      resource.title
+    )}
+  </h3>
+  {resource.description && <p class="resource-card__desc">{resource.description}</p>}
+  {resource.url && (
+    <span class="resource-card__link" aria-hidden="true">Visit resource →</span>
+  )}
+</article>
+
+<style>
+  .resource-card {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    height: 100%;
+  }
+
+  .resource-card--featured {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .resource-card__category {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-accent-strong);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .resource-card__title {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-sm);
+  }
+  .resource-card__title a {
+    text-decoration: none;
+    color: var(--color-text);
+  }
+  .resource-card__title a:hover {
+    color: var(--color-primary-strong);
+  }
+
+  .resource-card__desc {
+    color: var(--color-text-muted);
+    font-size: var(--text-base);
+    margin: 0 0 var(--space-md);
+    flex-grow: 1;
+  }
+
+  .resource-card__link {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--color-primary-strong);
+  }
+</style>

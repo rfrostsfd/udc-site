@@ -1,0 +1,72 @@
+---
+/**
+ * Call-to-action button/link. Renders as an <a> when given both text and link;
+ * renders nothing otherwise, so callers can pass optional CMS fields directly.
+ * `variant` controls visual weight. External http(s) links open in a new tab
+ * with safe rel attributes and an accessible hint.
+ */
+interface Props {
+  text?: string
+  link?: string
+  variant?: 'primary' | 'secondary'
+}
+
+const { text, link, variant = 'primary' } = Astro.props
+const isHttp = !!link && /^https?:\/\//.test(link)
+---
+
+{
+  text && link && (
+    <a
+      class:list={['cta', `cta--${variant}`]}
+      href={link}
+      {...(isHttp ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      {text}
+      {isHttp && <span class="sr-only"> (opens in a new tab)</span>}
+    </a>
+  )
+}
+
+<style>
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
+    padding: 0.8em 1.5em;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: var(--text-base);
+    text-decoration: none;
+    line-height: 1.2;
+    min-height: 44px; /* comfortable tap target */
+    transition: background-color 0.15s ease, color 0.15s ease,
+      border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  .cta:hover {
+    transform: translateY(-1px);
+  }
+
+  .cta--primary {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: 2px solid var(--color-primary);
+  }
+  .cta--primary:hover {
+    background-color: var(--color-primary-strong);
+    border-color: var(--color-primary-strong);
+    color: var(--color-primary-contrast);
+  }
+
+  .cta--secondary {
+    background-color: transparent;
+    color: var(--color-primary-strong);
+    border: 2px solid var(--color-border);
+  }
+  .cta--secondary:hover {
+    border-color: var(--color-primary);
+    color: var(--color-primary-strong);
+  }
+</style>

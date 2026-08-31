@@ -1,0 +1,132 @@
+---
+/**
+ * Site footer: organization name, contact details, and social links.
+ * Everything is optional — fields that are empty in Site Settings simply
+ * don't render.
+ */
+interface Props {
+  settings?: {
+    organizationName?: string
+    email?: string
+    phone?: string
+    address?: string
+    socialLinks?: {
+      facebook?: string
+      instagram?: string
+      linkedin?: string
+    }
+  } | null
+}
+
+const { settings } = Astro.props
+const orgName = settings?.organizationName ?? 'Universal Design Coalition'
+
+const social = [
+  { label: 'Facebook', href: settings?.socialLinks?.facebook },
+  { label: 'Instagram', href: settings?.socialLinks?.instagram },
+  { label: 'LinkedIn', href: settings?.socialLinks?.linkedin },
+].filter((s) => !!s.href)
+
+const year = new Date().getFullYear()
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <p class="org-name">{orgName}</p>
+      {settings?.address && <p class="muted">{settings.address}</p>}
+    </div>
+
+    <div class="site-footer__contact">
+      {(settings?.email || settings?.phone) && (
+        <h2 class="footer-heading">Contact</h2>
+      )}
+      {settings?.email && (
+        <p><a href={`mailto:${settings.email}`}>{settings.email}</a></p>
+      )}
+      {settings?.phone && (
+        <p><a href={`tel:${settings.phone.replace(/[^+\d]/g, '')}`}>{settings.phone}</a></p>
+      )}
+    </div>
+
+    {social.length > 0 && (
+      <div class="site-footer__social">
+        <h2 class="footer-heading">Follow</h2>
+        <ul>
+          {social.map((s) => (
+            <li>
+              <a href={s.href} target="_blank" rel="noopener noreferrer">
+                {s.label}<span class="sr-only"> (opens in a new tab)</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </div>
+
+  <div class="site-footer__legal">
+    <p class="muted">&copy; {year} {orgName}. All rights reserved.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: var(--space-2xl);
+    background-color: var(--color-surface-sunken);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .site-footer__inner {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding: var(--space-xl) var(--space-md);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .org-name {
+    font-weight: 700;
+    font-size: var(--text-lg);
+    color: var(--color-primary-strong);
+    margin-bottom: var(--space-xs);
+  }
+
+  .footer-heading {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .muted {
+    color: var(--color-text-muted);
+    white-space: pre-line; /* preserve line breaks from the address text field */
+  }
+
+  .site-footer p {
+    margin: 0 0 var(--space-xs);
+  }
+
+  .site-footer ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .site-footer__legal {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding: var(--space-md);
+    border-top: 1px solid var(--color-border);
+  }
+  .site-footer__legal p {
+    margin: 0;
+    font-size: var(--text-sm);
+  }
+</style>

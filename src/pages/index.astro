@@ -1,27 +1,182 @@
 ---
+/**
+ * Landing page — the primary storytelling document.
+ *
+ * Narrative order follows the design brief:
+ *   Hero → What is Universal Design → Why it matters → Who it helps →
+ *   Fall prevention → Upcoming events → Resources → Partners → Contact.
+ *
+ * Content comes entirely from Sanity. Queries request only published,
+ * `active` content and automatically exclude stale events and expired
+ * sponsors, so the site can't accumulate old content unnoticed.
+ */
 import { sanityClient } from 'sanity:client'
+import Layout from '../layouts/Layout.astro'
+import Hero from '../components/Hero.astro'
+import ContentSection from '../components/ContentSection.astro'
+import SectionIntro from '../components/SectionIntro.astro'
+import ResourceCard from '../components/ResourceCard.astro'
+import SponsorLogo from '../components/SponsorLogo.astro'
+import EventCard from '../components/EventCard.astro'
+import CTA from '../components/CTA.astro'
 
-const settings = await sanityClient.fetch(`
-  *[_type == "siteSettings"][0] {
-    title,
-    tagline,
-    intro
-  }
-`)
+const now = new Date().toISOString()
+const today = now.slice(0, 10)
+
+const [page, resources, sponsors, events] = await Promise.all([
+  sanityClient.fetch(`
+    *[_type == "landingPage"][0]{
+      hero,
+      whatIsUniversalDesign,
+      whyItMatters,
+      whoItHelps,
+      fallPrevention,
+      resourcesIntro,
+      sponsorsIntro,
+      contactCta
+    }
+  `),
+  sanityClient.fetch(`
+    *[_type == "resource" && active == true]
+      | order(featured desc, sortOrder asc, title asc){
+        title, description, category, url, featured
+      }
+  `),
+  sanityClient.fetch(
+    `*[_type == "sponsor" && active == true && (!defined(endDate) || endDate >= $today)]
+      | order(sortOrder asc, name asc){
+        name, logo, url, description, level
+      }`,
+    { today }
+  ),
+  sanityClient.fetch(
+    `*[_type == "event" && active == true && coalesce(endDate, startDate) >= $now]
+      | order(startDate asc){
+        title, startDate, endDate, description, location, url
+      }`,
+    { now }
+  ),
+])
+
+const hero = page?.hero
+const contactCta = page?.contactCta
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{settings?.title}</title>
-  </head>
+<Layout>
+  <div id="top">
+    <Hero hero={hero} />
+  </div>
 
-  <body>
-    <main>
-      <h1>{settings?.title}</h1>
-      <h2>{settings?.tagline}</h2>
-      <p>{settings?.intro}</p>
-    </main>
-  </body>
-</html>
+  <ContentSection
+    id="what-is-universal-design"
+    heading={page?.whatIsUniversalDesign?.heading}
+    body={page?.whatIsUniversalDesign?.body}
+  />
+
+  <ContentSection
+    heading={page?.whyItMatters?.heading}
+    body={page?.whyItMatters?.body}
+    tone="sunken"
+  />
+
+  <ContentSection
+    heading={page?.whoItHelps?.heading}
+    body={page?.whoItHelps?.body}
+  />
+
+  <ContentSection
+    id="fall-prevention"
+    heading={page?.fallPrevention?.heading}
+    body={page?.fallPrevention?.body}
+    tone="sunken"
+  />
+
+  {events.length > 0 && (
+    <SectionIntro id="events" heading="Upcoming Events">
+      <div class="grid grid--events">
+        {events.map((event: any) => (
+          <EventCard event={event} />
+        ))}
+      </div>
+    </SectionIntro>
+  )}
+
+  <SectionIntro
+    id="resources"
+    heading={page?.resourcesIntro?.heading ?? 'Resources'}
+    body={page?.resourcesIntro?.body}
+    tone="sunken"
+  >
+    {resources.length > 0 ? (
+      <div class="grid grid--cards">
+        {resources.map((resource: any) => (
+          <ResourceCard resource={resource} />
+        ))}
+      </div>
+    ) : (
+      <p class="empty-note">Resources are on the way. Please check back soon.</p>
+    )}
+  </SectionIntro>
+
+  {sponsors.length > 0 && (
+    <SectionIntro
+      id="sponsors"
+      heading={page?.sponsorsIntro?.heading ?? 'Our Community Partners'}
+      body={page?.sponsorsIntro?.body}
+    >
+      <div class="grid grid--logos">
+        {sponsors.map((sponsor: any) => (
+          <SponsorLogo sponsor={sponsor} />
+        ))}
+      </div>
+    </SectionIntro>
+  )}
+
+  {(contactCta?.heading || contactCta?.body || contactCta?.buttonText) && (
+    <section id="contact" class="contact">
+      <div class="contact__inner">
+        {contactCta?.heading && <h2>{contactCta.heading}</h2>}
+        {contactCta?.body && <p class="contact__body">{contactCta.body}</p>}
+        <CTA text={contactCta?.buttonText} link={contactCta?.buttonLink} variant="primary" />
+      </div>
+    </section>
+  )}
+</Layout>
+
+<style>
+  .grid {
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .grid--cards {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  }
+  .grid--events {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+  }
+  .grid--logos {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+    gap: var(--space-md);
+  }
+
+  .empty-note {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+
+  .contact {
+    padding-block: var(--space-2xl);
+  }
+  .contact__inner {
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    text-align: center;
+  }
+  .contact__body {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin-inline: auto;
+    margin-bottom: var(--space-lg);
+  }
+</style>
