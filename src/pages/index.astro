@@ -18,6 +18,8 @@ import SectionIntro from '../components/SectionIntro.astro'
 import ResourceCard from '../components/ResourceCard.astro'
 import SponsorLogo from '../components/SponsorLogo.astro'
 import EventCard from '../components/EventCard.astro'
+import PrincipleCard from '../components/PrincipleCard.astro'
+import SpaceCard from '../components/SpaceCard.astro'
 import CTA from '../components/CTA.astro'
 
 const now = new Date().toISOString()
@@ -30,6 +32,8 @@ const [page, resources, sponsors, events] = await Promise.all([
       whatIsUniversalDesign,
       whyItMatters,
       whoItHelps,
+      principles,
+      inPractice,
       fallPrevention,
       resourcesIntro,
       sponsorsIntro,
@@ -83,6 +87,35 @@ const contactCta = page?.contactCta
     heading={page?.whoItHelps?.heading}
     body={page?.whoItHelps?.body}
   />
+
+  {page?.principles?.items?.length > 0 && (
+    <SectionIntro
+      id="principles"
+      heading={page.principles.heading ?? 'The benefits of Universal Design'}
+      body={page.principles.intro}
+      tone="sunken"
+    >
+      <div class="grid grid--principles">
+        {page.principles.items.map((item: any) => (
+          <PrincipleCard item={item} />
+        ))}
+      </div>
+    </SectionIntro>
+  )}
+
+  {page?.inPractice?.spaces?.length > 0 && (
+    <SectionIntro
+      id="in-practice"
+      heading={page.inPractice.heading ?? 'Universal Design in practice'}
+      body={page.inPractice.intro}
+    >
+      <div class="grid grid--spaces">
+        {page.inPractice.spaces.map((space: any) => (
+          <SpaceCard space={space} />
+        ))}
+      </div>
+    </SectionIntro>
+  )}
 
   <ContentSection
     id="fall-prevention"
@@ -157,6 +190,13 @@ const contactCta = page?.contactCta
   .grid--logos {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
     gap: var(--space-md);
+  }
+  .grid--principles {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+    gap: var(--space-md);
+  }
+  .grid--spaces {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   }
 
   .empty-note {

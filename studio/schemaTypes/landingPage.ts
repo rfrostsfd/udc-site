@@ -146,6 +146,104 @@ export const landingPage = defineType({
     }),
 
     defineField({
+      name: 'principles',
+      title: 'Principles / Benefits',
+      type: 'object',
+      description: 'The core benefits of Universal Design, shown as a set of cards.',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'intro',
+          title: 'Intro',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'items',
+          title: 'Benefits',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'title',
+                  title: 'Benefit',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'description',
+                  title: 'Short Description',
+                  type: 'string',
+                }),
+              ],
+              preview: {
+                select: {title: 'title', subtitle: 'description'},
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    defineField({
+      name: 'inPractice',
+      title: 'Universal Design in Practice',
+      type: 'object',
+      description:
+        'Concrete, real-life examples grouped by space (e.g. Kitchen, Bath, Whole House).',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'intro',
+          title: 'Intro',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'spaces',
+          title: 'Spaces',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'name',
+                  title: 'Space Name',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'features',
+                  title: 'Features',
+                  type: 'array',
+                  of: [{type: 'string'}],
+                }),
+              ],
+              preview: {
+                select: {title: 'name', features: 'features'},
+                prepare({title, features}) {
+                  const count = Array.isArray(features) ? features.length : 0
+                  return {title, subtitle: `${count} feature${count === 1 ? '' : 's'}`}
+                },
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    defineField({
       name: 'fallPrevention',
       title: 'Fall Prevention',
       type: 'object',

@@ -1,0 +1,71 @@
+---
+/**
+ * A single space (Kitchen, Bath, Whole House) with a bulleted list of concrete
+ * Universal Design features. Used in the "In Practice" section to show what
+ * good design actually looks like room by room.
+ */
+interface Props {
+  space: {
+    name?: string
+    features?: string[]
+  }
+}
+
+const { space } = Astro.props
+const features = (space.features ?? []).filter(Boolean)
+---
+
+<article class="space">
+  <h3 class="space__name">{space.name}</h3>
+  {features.length > 0 && (
+    <ul class="space__features">
+      {features.map((feature) => (
+        <li>{feature}</li>
+      ))}
+    </ul>
+  )}
+</article>
+
+<style>
+  .space {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    height: 100%;
+  }
+
+  .space__name {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 2px solid var(--color-border);
+  }
+
+  .space__features {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .space__features li {
+    position: relative;
+    padding-left: 1.5rem;
+    color: var(--color-text-muted);
+  }
+
+  /* Custom marker in the accent color; aria-hidden by being pure CSS. */
+  .space__features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+  }
+</style>
