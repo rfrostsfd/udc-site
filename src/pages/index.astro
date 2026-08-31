@@ -4,7 +4,15 @@
  *
  * Narrative order follows the design brief:
  *   Hero → What is Universal Design → Why it matters → Who it helps →
- *   Fall prevention → Upcoming events → Resources → Partners → Contact.
+ *   Principles → In practice → Fall prevention → Events → Resources →
+ *   Sponsors → Get involved.
+ *
+ * Background rhythm is deliberately calm: related sections share a background
+ * and transitions mark major shifts in the story rather than every section.
+ *   [ default ] Hero · What is UD · Why · Who it helps
+ *   [ sunken  ] Principles · In practice
+ *   [ default ] Fall prevention · Events · Resources · Sponsors
+ *   [ primary ] Get involved (the visual endpoint)
  *
  * Content comes entirely from Sanity. Queries request only published,
  * `active` content and automatically exclude stale events and expired
@@ -64,6 +72,30 @@ const [page, resources, sponsors, events] = await Promise.all([
 
 const hero = page?.hero
 const contactCta = page?.contactCta
+
+// Landing page shows a small set of priority resources; the rest live on
+// /resources. Ordering already puts featured first.
+const RESOURCE_LIMIT = 6
+const featuredResources = resources.slice(0, RESOURCE_LIMIT)
+const hasMoreResources = resources.length > RESOURCE_LIMIT
+
+// Group sponsors by level when levels are in use; otherwise show a flat grid.
+const SPONSOR_LEVELS = [
+  { value: 'presenting', label: 'Presenting Sponsor' },
+  { value: 'supporting', label: 'Supporting Sponsors' },
+  { value: 'community-partner', label: 'Community Partners' },
+]
+const sponsorGroups = SPONSOR_LEVELS
+  .map((level) => ({
+    label: level.label,
+    items: sponsors.filter((s: any) => s.level === level.value),
+  }))
+  .filter((group) => group.items.length > 0)
+// Sponsors with no level (or an unknown one) fall into a trailing, unlabeled
+// grid — or, if nobody has a level, become the whole (ungrouped) list.
+const ungroupedSponsors = sponsors.filter(
+  (s: any) => !SPONSOR_LEVELS.some((l) => l.value === s.level)
+)
 ---
 
 <Layout>
@@ -80,12 +112,14 @@ const contactCta = page?.contactCta
   <ContentSection
     heading={page?.whyItMatters?.heading}
     body={page?.whyItMatters?.body}
-    tone="sunken"
   />
 
   <ContentSection
+    id="who-it-helps"
     heading={page?.whoItHelps?.heading}
     body={page?.whoItHelps?.body}
+    image={page?.whoItHelps?.image}
+    imageSide="left"
   />
 
   {page?.principles?.items?.length > 0 && (
@@ -108,6 +142,7 @@ const contactCta = page?.contactCta
       id="in-practice"
       heading={page.inPractice.heading ?? 'Universal Design in practice'}
       body={page.inPractice.intro}
+      tone="sunken"
     >
       <div class="grid grid--spaces">
         {page.inPractice.spaces.map((space: any) => (
@@ -121,7 +156,8 @@ const contactCta = page?.contactCta
     id="fall-prevention"
     heading={page?.fallPrevention?.heading}
     body={page?.fallPrevention?.body}
-    tone="sunken"
+    image={page?.fallPrevention?.image}
+    imageSide="right"
   />
 
   {events.length > 0 && (
@@ -138,14 +174,20 @@ const contactCta = page?.contactCta
     id="resources"
     heading={page?.resourcesIntro?.heading ?? 'Resources'}
     body={page?.resourcesIntro?.body}
-    tone="sunken"
   >
-    {resources.length > 0 ? (
-      <div class="grid grid--cards">
-        {resources.map((resource: any) => (
-          <ResourceCard resource={resource} />
-        ))}
-      </div>
+    {featuredResources.length > 0 ? (
+      <>
+        <div class="grid grid--cards">
+          {featuredResources.map((resource: any) => (
+            <ResourceCard resource={resource} />
+          ))}
+        </div>
+        {hasMoreResources && (
+          <p class="view-all">
+            <a href="/resources">View all resources ({resources.length}) →</a>
+          </p>
+        )}
+      </>
     ) : (
       <p class="empty-note">Resources are on the way. Please check back soon.</p>
     )}
@@ -154,14 +196,31 @@ const contactCta = page?.contactCta
   {sponsors.length > 0 && (
     <SectionIntro
       id="sponsors"
-      heading={page?.sponsorsIntro?.heading ?? 'Our Community Partners'}
+      heading={page?.sponsorsIntro?.heading ?? 'Our sponsors & partners'}
       body={page?.sponsorsIntro?.body}
     >
-      <div class="grid grid--logos">
-        {sponsors.map((sponsor: any) => (
-          <SponsorLogo sponsor={sponsor} />
-        ))}
-      </div>
+      {sponsorGroups.map((group) => (
+        <div class="sponsor-group">
+          <h3 class="sponsor-group__label">{group.label}</h3>
+          <div class="grid grid--logos">
+            {group.items.map((sponsor: any) => (
+              <SponsorLogo sponsor={sponsor} />
+            ))}
+          </div>
+        </div>
+      ))}
+      {ungroupedSponsors.length > 0 && (
+        <div class="sponsor-group">
+          {sponsorGroups.length > 0 && (
+            <h3 class="sponsor-group__label">More partners</h3>
+          )}
+          <div class="grid grid--logos">
+            {ungroupedSponsors.map((sponsor: any) => (
+              <SponsorLogo sponsor={sponsor} />
+            ))}
+          </div>
+        </div>
+      )}
     </SectionIntro>
   )}
 
@@ -170,7 +229,7 @@ const contactCta = page?.contactCta
       <div class="contact__inner">
         {contactCta?.heading && <h2>{contactCta.heading}</h2>}
         {contactCta?.body && <p class="contact__body">{contactCta.body}</p>}
-        <CTA text={contactCta?.buttonText} link={contactCta?.buttonLink} variant="primary" />
+        <CTA text={contactCta?.buttonText} link={contactCta?.buttonLink} variant="inverse" />
       </div>
     </section>
   )}
@@ -188,15 +247,38 @@ const contactCta = page?.contactCta
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
   }
   .grid--logos {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 11rem), 1fr));
     gap: var(--space-md);
   }
   .grid--principles {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+    gap: var(--space-lg) var(--space-xl);
   }
   .grid--spaces {
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .sponsor-group + .sponsor-group {
+    margin-top: var(--space-xl);
+  }
+  .sponsor-group__label {
+    font-size: var(--text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .view-all {
+    margin-top: var(--space-lg);
+  }
+  .view-all a {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--color-primary-strong);
+  }
+  .view-all a:hover {
+    color: var(--color-accent-strong);
   }
 
   .empty-note {
@@ -204,8 +286,11 @@ const contactCta = page?.contactCta
     font-size: var(--text-lg);
   }
 
+  /* Closing CTA — the page's visual endpoint. */
   .contact {
     padding-block: var(--space-2xl);
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
   }
   .contact__inner {
     max-width: var(--content-width);
@@ -213,10 +298,14 @@ const contactCta = page?.contactCta
     padding-inline: var(--space-md);
     text-align: center;
   }
+  .contact :global(h2) {
+    color: var(--color-primary-contrast);
+  }
   .contact__body {
     font-size: var(--text-lg);
-    color: var(--color-text-muted);
+    color: color-mix(in srgb, var(--color-primary-contrast) 88%, transparent);
     margin-inline: auto;
     margin-bottom: var(--space-lg);
+    max-width: 46ch;
   }
 </style>

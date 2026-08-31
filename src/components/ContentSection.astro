@@ -5,36 +5,71 @@
  * Matters, Who It Helps, Fall Prevention). Renders nothing if there's no
  * content, so optional CMS sections disappear cleanly.
  *
+ * When an `image` is provided it becomes a two-column image + copy split on
+ * desktop (side controlled by `imageSide`) and stacks on mobile. Without an
+ * image it stays a single reading column.
+ *
  * `tone="sunken"` gives an alternating background for vertical rhythm.
  * `body` is a plain multi-line string; blank lines become paragraphs.
  */
+import { urlFor } from '../lib/sanity'
+
 interface Props {
   id?: string
   heading?: string
   body?: string
   tone?: 'default' | 'sunken'
+  image?: any
+  imageSide?: 'left' | 'right'
 }
 
-const { id, heading, body, tone = 'default' } = Astro.props
+const { id, heading, body, tone = 'default', image, imageSide = 'right' } = Astro.props
 const hasContent = !!(heading || body)
 
-// Split the textarea content on blank lines into paragraphs.
 const paragraphs = (body ?? '')
   .split(/\n\s*\n/)
   .map((p) => p.trim())
   .filter(Boolean)
+
+const hasImage = !!image?.asset
+const imageUrl = hasImage
+  ? urlFor(image).width(1100).height(880).fit('crop').auto('format').url()
+  : null
+const imageAlt = image?.alt ?? ''
 ---
 
 {
   hasContent && (
-    <section id={id} class:list={['section', tone === 'sunken' && 'section--sunken']}>
+    <section
+      id={id}
+      class:list={[
+        'section',
+        tone === 'sunken' && 'section--sunken',
+        hasImage && 'section--split',
+        hasImage && imageSide === 'left' && 'section--image-left',
+      ]}
+    >
       <div class="section__inner">
-        {heading && <h2>{heading}</h2>}
-        <div class="prose">
-          {paragraphs.map((p) => (
-            <p>{p}</p>
-          ))}
+        <div class="section__text">
+          {heading && <h2>{heading}</h2>}
+          <div class="prose">
+            {paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
         </div>
+        {imageUrl && (
+          <figure class="section__media">
+            <img
+              src={imageUrl}
+              alt={imageAlt}
+              width="1100"
+              height="880"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        )}
       </div>
     </section>
   )
@@ -56,5 +91,35 @@ const paragraphs = (body ?? '')
 
   .section :global(.prose p:last-child) {
     margin-bottom: 0;
+  }
+
+  /* Split layout: image + copy side by side on wider screens. */
+  .section--split .section__inner {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 52rem) {
+    .section--split .section__inner {
+      grid-template-columns: 1fr 1fr;
+    }
+    /* Put the image first when requested (source order stays copy-first for
+       a sensible reading/tab order; we reorder visually only). */
+    .section--image-left .section__media {
+      order: -1;
+    }
+  }
+
+  .section__media {
+    margin: 0;
+  }
+  .section__media img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
   }
 </style>

@@ -1,9 +1,10 @@
 ---
 /**
- * Site header: wordmark plus a small set of in-page anchor links.
- * This is a single-page site, so navigation points at landing-page sections
- * rather than separate routes. Kept deliberately simple — no dropdowns,
- * no client-side JS.
+ * Site header: a simple wordmark (an emblem + the organization name) plus a
+ * small set of in-page anchor links. This is a single-page site, so navigation
+ * points at landing-page sections rather than separate routes. The emblem is a
+ * lightweight placeholder that a real logo can replace later without changing
+ * the layout. No dropdowns, no client-side JS.
  */
 interface Props {
   settings?: {
@@ -13,20 +14,22 @@ interface Props {
 }
 
 const { settings } = Astro.props
-const wordmark = settings?.shortName || settings?.organizationName || 'UDC'
+const orgName = settings?.organizationName || 'Universal Design Coalition'
+const emblem = settings?.shortName || 'UDC'
 
 const navLinks = [
-  { text: 'What is Universal Design', href: '#what-is-universal-design' },
+  { text: 'What is UD', href: '#what-is-universal-design' },
+  { text: 'In practice', href: '#in-practice' },
   { text: 'Resources', href: '#resources' },
-  { text: 'Partners', href: '#sponsors' },
   { text: 'Contact', href: '#contact' },
 ]
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="wordmark" href="#top" aria-label={`${settings?.organizationName ?? 'Home'} — home`}>
-      {wordmark}
+    <a class="wordmark" href="#top" aria-label={`${orgName} — home`}>
+      <span class="wordmark__emblem" aria-hidden="true">{emblem}</span>
+      <span class="wordmark__name">{orgName}</span>
     </a>
     <nav aria-label="Primary">
       <ul class="nav-list">
@@ -43,7 +46,7 @@ const navLinks = [
     position: sticky;
     top: 0;
     z-index: 20;
-    background-color: color-mix(in srgb, var(--color-background) 88%, transparent);
+    background-color: color-mix(in srgb, var(--color-background) 90%, transparent);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--color-border);
   }
@@ -59,11 +62,34 @@ const navLinks = [
   }
 
   .wordmark {
-    font-weight: 700;
-    font-size: var(--text-lg);
-    letter-spacing: -0.02em;
-    color: var(--color-primary-strong);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
     text-decoration: none;
+    color: var(--color-primary-strong);
+  }
+
+  .wordmark__emblem {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+  }
+
+  .wordmark__name {
+    font-weight: 700;
+    font-size: var(--text-base);
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    max-width: 12ch;
   }
 
   .nav-list {
@@ -86,8 +112,8 @@ const navLinks = [
     color: var(--color-primary-strong);
   }
 
-  /* On small screens the anchor nav wraps below the wordmark rather than
-     forcing a hamburger menu — fewer moving parts, no JS. */
+  /* On narrow screens keep only the emblem and let the nav wrap below — no
+     hamburger, no JS. */
   @media (max-width: 40rem) {
     .site-header__inner {
       flex-direction: column;

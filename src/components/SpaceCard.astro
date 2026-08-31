@@ -1,38 +1,76 @@
 ---
 /**
- * A single space (Kitchen, Bath, Whole House) with a bulleted list of concrete
- * Universal Design features. Used in the "In Practice" section to show what
- * good design actually looks like room by room.
+ * A single space (Kitchen, Bath, Whole Home) with an optional photo and a
+ * bulleted list of concrete Universal Design features. Used in the "In
+ * Practice" section to show what good design actually looks like room by room.
+ *
+ * The photo sits at the top of the card at a consistent aspect ratio. If no
+ * photo is set, the card degrades gracefully to a titled feature list.
  */
+import { urlFor } from '../lib/sanity'
+
 interface Props {
   space: {
     name?: string
+    image?: any
     features?: string[]
   }
 }
 
 const { space } = Astro.props
 const features = (space.features ?? []).filter(Boolean)
+
+const hasImage = !!space.image?.asset
+const imageUrl = hasImage
+  ? urlFor(space.image).width(720).height(480).fit('crop').auto('format').url()
+  : null
+const imageAlt = space.image?.alt ?? ''
 ---
 
-<article class="space">
-  <h3 class="space__name">{space.name}</h3>
-  {features.length > 0 && (
-    <ul class="space__features">
-      {features.map((feature) => (
-        <li>{feature}</li>
-      ))}
-    </ul>
+<article class:list={['space', hasImage && 'space--with-image']}>
+  {imageUrl && (
+    <img
+      class="space__img"
+      src={imageUrl}
+      alt={imageAlt}
+      width="720"
+      height="480"
+      loading="lazy"
+      decoding="async"
+    />
   )}
+  <div class="space__body">
+    <h3 class="space__name">{space.name}</h3>
+    {features.length > 0 && (
+      <ul class="space__features">
+        {features.map((feature) => (
+          <li>{feature}</li>
+        ))}
+      </ul>
+    )}
+  </div>
 </article>
 
 <style>
   .space {
+    display: flex;
+    flex-direction: column;
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-lg);
+    overflow: hidden;
     height: 100%;
+  }
+
+  .space__img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    display: block;
+  }
+
+  .space__body {
+    padding: var(--space-lg);
   }
 
   .space__name {
@@ -57,7 +95,7 @@ const features = (space.features ?? []).filter(Boolean)
     color: var(--color-text-muted);
   }
 
-  /* Custom marker in the accent color; aria-hidden by being pure CSS. */
+  /* Decorative marker in the primary color; purely CSS so it's ignored by AT. */
   .space__features li::before {
     content: '';
     position: absolute;

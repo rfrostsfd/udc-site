@@ -1,7 +1,9 @@
 ---
 /**
  * A single Universal Design benefit/principle: a short title and a one-line
- * description. Rendered as a compact card in the Principles grid.
+ * description. Rendered as a light, low-weight item in the Principles grid —
+ * a small accent marker and a thin rule instead of a heavy boxed card, so
+ * eight of them read as a calm, scannable set rather than a wall of boxes.
  */
 interface Props {
   item: {
@@ -13,24 +15,22 @@ interface Props {
 const { item } = Astro.props
 ---
 
-<article class="principle">
+<div class="principle">
   <h3 class="principle__title">{item.title}</h3>
   {item.description && <p class="principle__desc">{item.description}</p>}
-</article>
+</div>
 
 <style>
   .principle {
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: var(--space-md) var(--space-lg);
+    padding-top: var(--space-md);
+    border-top: 2px solid var(--color-primary);
   }
 
   .principle__title {
     font-size: var(--text-base);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-primary-strong);
+    font-weight: 650;
+    letter-spacing: 0.02em;
+    color: var(--color-text);
     margin: 0 0 var(--space-xs);
   }
 

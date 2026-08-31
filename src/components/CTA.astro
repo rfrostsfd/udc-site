@@ -8,7 +8,7 @@
 interface Props {
   text?: string
   link?: string
-  variant?: 'primary' | 'secondary'
+  variant?: 'primary' | 'secondary' | 'inverse'
 }
 
 const { text, link, variant = 'primary' } = Astro.props
@@ -68,5 +68,17 @@ const isHttp = !!link && /^https?:\/\//.test(link)
   .cta--secondary:hover {
     border-color: var(--color-primary);
     color: var(--color-primary-strong);
+  }
+
+  /* For use on dark/primary backgrounds. */
+  .cta--inverse {
+    background-color: var(--color-surface);
+    color: var(--color-primary-strong);
+    border: 2px solid var(--color-surface);
+  }
+  .cta--inverse:hover {
+    background-color: transparent;
+    color: var(--color-primary-contrast);
+    border-color: var(--color-surface);
   }
 </style>

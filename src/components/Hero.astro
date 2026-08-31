@@ -21,7 +21,7 @@ interface Props {
 const { hero } = Astro.props
 const heading = hero?.heading ?? 'Design for life, not just for today.'
 
-const imageUrl = hero?.image
+const imageUrl = hero?.image?.asset
   ? urlFor(hero.image).width(1400).height(1050).fit('crop').auto('format').url()
   : null
 // Alt text may be authored on the image object; fall back to empty (decorative).
@@ -99,6 +99,7 @@ const imageAlt = hero?.image?.alt ?? ''
   .hero__media img {
     width: 100%;
     height: auto;
+    aspect-ratio: 4 / 3;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
     object-fit: cover;

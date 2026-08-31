@@ -1,9 +1,10 @@
 ---
 /**
- * A single sponsor / community partner. Shows the logo when present (on a
- * consistent surface so mismatched logos still read as a set), otherwise
- * falls back to the organization name as text. Recognition, not advertising:
- * no promotional styling, uniform treatment across sponsors.
+ * A single sponsor / community partner. Shows the logo when present, sized to
+ * fit a consistent container with `object-fit: contain` so logos of different
+ * aspect ratios all read as one tidy set. Falls back to a clean name plate
+ * when no logo is uploaded. Recognition, not advertising: uniform treatment,
+ * generous whitespace, no promotional styling.
  */
 import { urlFor } from '../lib/sanity'
 
@@ -12,31 +13,33 @@ interface Props {
     name?: string
     logo?: any
     url?: string
-    description?: string
   }
 }
 
 const { sponsor } = Astro.props
 
-const logoUrl = sponsor.logo
-  ? urlFor(sponsor.logo).width(320).height(160).fit('max').auto('format').url()
+const hasLogo = !!sponsor.logo?.asset
+const logoUrl = hasLogo
+  ? urlFor(sponsor.logo).width(400).height(200).fit('max').auto('format').url()
   : null
+
+const name = sponsor.name ?? 'Sponsor'
 ---
 
 <article class="sponsor">
   {sponsor.url ? (
     <a class="sponsor__link" href={sponsor.url} target="_blank" rel="noopener noreferrer">
       {logoUrl ? (
-        <img src={logoUrl} alt={sponsor.name ?? 'Sponsor'} loading="lazy" />
+        <img src={logoUrl} alt={name} width="400" height="200" loading="lazy" decoding="async" />
       ) : (
-        <span class="sponsor__name">{sponsor.name}</span>
+        <span class="sponsor__name">{name}</span>
       )}
-      <span class="sr-only"> (opens in a new tab)</span>
+      <span class="sr-only"> — visit website (opens in a new tab)</span>
     </a>
   ) : logoUrl ? (
-    <img src={logoUrl} alt={sponsor.name ?? 'Sponsor'} loading="lazy" />
+    <img src={logoUrl} alt={name} width="400" height="200" loading="lazy" decoding="async" />
   ) : (
-    <span class="sponsor__name">{sponsor.name}</span>
+    <span class="sponsor__name">{name}</span>
   )}
 </article>
 
@@ -49,7 +52,7 @@ const logoUrl = sponsor.logo
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: var(--space-lg);
-    min-height: 7rem;
+    aspect-ratio: 3 / 2;
   }
 
   .sponsor__link {
@@ -59,11 +62,14 @@ const logoUrl = sponsor.logo
     width: 100%;
     height: 100%;
     text-decoration: none;
+    border-radius: var(--radius-sm);
   }
 
   .sponsor img {
-    max-height: 5rem;
+    max-width: 100%;
+    max-height: 100%;
     width: auto;
+    height: auto;
     object-fit: contain;
   }
 
@@ -71,5 +77,6 @@ const logoUrl = sponsor.logo
     font-weight: 600;
     color: var(--color-text);
     text-align: center;
+    line-height: var(--leading-snug);
   }
 </style>

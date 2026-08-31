@@ -35,19 +35,9 @@ export const landingPage = defineType({
         defineField({
         name: 'image',
         title: 'Hero Image',
-        type: 'image',
-        options: {
-            hotspot: true,
-        },
-        fields: [
-            defineField({
-            name: 'alt',
-            title: 'Alt Text',
-            type: 'string',
-            description:
-                'Describe the image for screen readers. Leave blank only if the image is purely decorative.',
-            }),
-        ],
+        type: 'imageWithAlt',
+        description:
+            'Shown beside the headline on desktop. Choose an everyday, welcoming scene — a home, a public space, people of different ages moving through it.',
         }),
 
         defineField({
@@ -142,6 +132,13 @@ export const landingPage = defineType({
           type: 'text',
           rows: 5,
         }),
+        defineField({
+          name: 'image',
+          title: 'Who It Helps Image',
+          type: 'imageWithAlt',
+          description:
+            'A warm, everyday scene showing a range of people — children, parents, people carrying things, older adults. Shown beside the text.',
+        }),
       ],
     }),
 
@@ -224,6 +221,13 @@ export const landingPage = defineType({
                   validation: (Rule) => Rule.required(),
                 }),
                 defineField({
+                  name: 'image',
+                  title: 'Photo',
+                  type: 'imageWithAlt',
+                  description:
+                    'A photo of this space (e.g. an accessible kitchen). Shown at the top of the card.',
+                }),
+                defineField({
                   name: 'features',
                   title: 'Features',
                   type: 'array',
@@ -231,10 +235,10 @@ export const landingPage = defineType({
                 }),
               ],
               preview: {
-                select: {title: 'name', features: 'features'},
-                prepare({title, features}) {
+                select: {title: 'name', media: 'image', features: 'features'},
+                prepare({title, media, features}) {
                   const count = Array.isArray(features) ? features.length : 0
-                  return {title, subtitle: `${count} feature${count === 1 ? '' : 's'}`}
+                  return {title, media, subtitle: `${count} feature${count === 1 ? '' : 's'}`}
                 },
               },
             },
@@ -258,6 +262,13 @@ export const landingPage = defineType({
           title: 'Body',
           type: 'text',
           rows: 5,
+        }),
+        defineField({
+          name: 'image',
+          title: 'Fall Prevention Image (optional)',
+          type: 'imageWithAlt',
+          description:
+            'Optional. A calm, everyday scene — good lighting, a clear hallway, a step-free entry. Used only if it improves the layout.',
         }),
       ],
     }),

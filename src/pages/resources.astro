@@ -1,0 +1,85 @@
+---
+/**
+ * Dedicated resources page. The landing page shows a small set of priority
+ * resources; this page lists them all. Kept intentionally simple — an ordered
+ * grid, no filtering or search until the volume justifies it.
+ */
+import { sanityClient } from 'sanity:client'
+import Layout from '../layouts/Layout.astro'
+import ResourceCard from '../components/ResourceCard.astro'
+
+const resources = await sanityClient.fetch(`
+  *[_type == "resource" && active == true]
+    | order(featured desc, sortOrder asc, title asc){
+      title, description, category, url, featured
+    }
+`)
+---
+
+<Layout
+  title="Resources"
+  description="Trusted organizations and references on Universal Design, home modification, and fall prevention across the SunCoast and beyond."
+>
+  <section class="resources-page">
+    <div class="resources-page__inner">
+      <p class="resources-page__back"><a href="/#resources">← Back to home</a></p>
+      <header class="resources-page__header">
+        <h1>Resources</h1>
+        <p class="resources-page__intro">
+          Trusted organizations and references on Universal Design, home
+          modification, and fall prevention — across the SunCoast and beyond.
+          Each link opens an outside resource.
+        </p>
+      </header>
+
+      {resources.length > 0 ? (
+        <div class="grid grid--cards">
+          {resources.map((resource: any) => (
+            <ResourceCard resource={resource} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-note">Resources are on the way. Please check back soon.</p>
+      )}
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .resources-page {
+    padding-block: var(--space-xl);
+  }
+  .resources-page__inner {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+  .resources-page__back {
+    margin-bottom: var(--space-md);
+  }
+  .resources-page__back a {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .resources-page__header {
+    max-width: var(--content-width);
+    margin-bottom: var(--space-lg);
+  }
+  .resources-page__intro {
+    font-size: var(--text-lg);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .grid {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+  }
+
+  .empty-note {
+    color: var(--color-text-muted);
+    font-size: var(--text-lg);
+  }
+</style>
