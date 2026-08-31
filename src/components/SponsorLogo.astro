@@ -19,8 +19,11 @@ interface Props {
 const { sponsor } = Astro.props
 
 const hasLogo = !!sponsor.logo?.asset
+// Request width only (no forced height) so Sanity preserves each logo's real
+// aspect ratio and never crops it to fit a box. The card gives it a consistent
+// frame; the CSS below scales the whole logo to fit inside.
 const logoUrl = hasLogo
-  ? urlFor(sponsor.logo).width(400).height(200).fit('max').auto('format').url()
+  ? urlFor(sponsor.logo).width(500).fit('max').auto('format').url()
   : null
 
 const name = sponsor.name ?? 'Sponsor'
@@ -30,14 +33,14 @@ const name = sponsor.name ?? 'Sponsor'
   {sponsor.url ? (
     <a class="sponsor__link" href={sponsor.url} target="_blank" rel="noopener noreferrer">
       {logoUrl ? (
-        <img src={logoUrl} alt={name} width="400" height="200" loading="lazy" decoding="async" />
+        <img src={logoUrl} alt={name} loading="lazy" decoding="async" />
       ) : (
         <span class="sponsor__name">{name}</span>
       )}
       <span class="sr-only"> — visit website (opens in a new tab)</span>
     </a>
   ) : logoUrl ? (
-    <img src={logoUrl} alt={name} width="400" height="200" loading="lazy" decoding="async" />
+    <img src={logoUrl} alt={name} loading="lazy" decoding="async" />
   ) : (
     <span class="sponsor__name">{name}</span>
   )}
@@ -51,8 +54,9 @@ const name = sponsor.name ?? 'Sponsor'
     background-color: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-lg);
+    padding: var(--space-md);
     aspect-ratio: 3 / 2;
+    overflow: hidden;
   }
 
   .sponsor__link {
