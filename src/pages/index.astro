@@ -1,0 +1,27 @@
+---
+import { sanityClient } from 'sanity:client'
+
+const settings = await sanityClient.fetch(`
+  *[_type == "siteSettings"][0] {
+    title,
+    tagline,
+    intro
+  }
+`)
+---
+
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{settings?.title}</title>
+  </head>
+
+  <body>
+    <main>
+      <h1>{settings?.title}</h1>
+      <h2>{settings?.tagline}</h2>
+      <p>{settings?.intro}</p>
+    </main>
+  </body>
+</html>
