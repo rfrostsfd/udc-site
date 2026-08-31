@@ -231,4 +231,18 @@ export const landingPage = defineType({
       ],
     }),
   ],
+
+  // Singleton document — show a stable, readable title in the Studio instead of
+  // a dump of the hero object's fields.
+  preview: {
+    select: {
+      heading: 'hero.heading',
+    },
+    prepare({heading}) {
+      return {
+        title: 'Landing Page',
+        subtitle: heading || 'Homepage content',
+      }
+    },
+  },
 })
