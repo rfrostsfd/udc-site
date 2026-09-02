@@ -1,0 +1,181 @@
+---
+/**
+ * Editorial opening composition. A large serif headline (with an optional
+ * green italic accent phrase) sits beside a layered image collage. One primary
+ * action is offered as an inline text link — no button pair.
+ *
+ * Everything is optional and degrades gracefully:
+ *   - no images  → confident single text column
+ *   - primary image only → arch image + badge
+ *   - primary + supporting images → layered collage
+ */
+import { urlFor } from '../lib/sanity'
+
+interface ImageWithAlt {
+  asset?: unknown
+  alt?: string
+}
+interface Props {
+  hero?: {
+    eyebrow?: string
+    heading?: string
+    headingAccent?: string
+    subheading?: string
+    badge?: string
+    image?: ImageWithAlt
+    supportingImages?: ImageWithAlt[]
+    primaryCta?: { text?: string; link?: string }
+  } | null
+}
+
+const { hero } = Astro.props
+const heading = hero?.heading ?? 'Design that fits real life.'
+
+const primary = hero?.image?.asset ? hero.image : null
+const primaryUrl = primary
+  ? urlFor(primary).width(1200).height(920).fit('crop').auto('format').url()
+  : null
+
+const supporting = (hero?.supportingImages ?? [])
+  .filter((img) => !!img?.asset)
+  .slice(0, 3)
+const supportingUrls = supporting.map((img) => ({
+  url: urlFor(img).width(760).height(600).fit('crop').auto('format').url(),
+  alt: img.alt ?? '',
+}))
+
+const hasMedia = !!primaryUrl
+const cta = hero?.primaryCta
+---
+
+<section class="hero" class:list={[hasMedia && 'hero--collage']}>
+  <div class="hero__text">
+    {hero?.eyebrow && <p class="eyebrow">{hero.eyebrow}</p>}
+    <h1 class="display hero__heading">
+      {heading}{hero?.headingAccent && <span class="accent"> {hero.headingAccent}</span>}
+    </h1>
+    <span class="accent-rule"></span>
+    {hero?.subheading && <p class="hero__subheading">{hero.subheading}</p>}
+    {cta?.text && cta?.link && (
+      <a class="text-link hero__link" href={cta.link}>{cta.text}</a>
+    )}
+  </div>
+
+  {hasMedia && (
+    <div class="hero__media">
+      <figure class="hero__primary">
+        <img src={primaryUrl} alt={hero?.image?.alt ?? ''} width="1200" height="920" fetchpriority="high" />
+        {hero?.badge && (
+          <p class="hero__badge display">{hero.badge}</p>
+        )}
+      </figure>
+
+      {supportingUrls.length > 0 && (
+        <div class="hero__support">
+          {supportingUrls.map((img) => (
+            <figure class="hero__support-item">
+              <img src={img.url} alt={img.alt} width="760" height="600" loading="lazy" decoding="async" />
+            </figure>
+          ))}
+        </div>
+      )}
+    </div>
+  )}
+</section>
+
+<style>
+  .hero {
+    max-width: var(--wide-width);
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-md) var(--space-xl);
+  }
+
+  .hero--collage {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 60rem) {
+    .hero--collage {
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .hero__heading {
+    font-size: var(--text-4xl);
+    max-width: 12ch;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  .hero__subheading {
+    font-size: var(--text-lg);
+    color: var(--color-muted);
+    max-width: 42ch;
+    margin: 0 0 var(--space-lg);
+  }
+
+  .hero__link {
+    font-size: var(--text-base);
+  }
+
+  /* ---- Collage ---- */
+  .hero__media {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .hero__primary {
+    position: relative;
+    margin: 0;
+  }
+  .hero__primary img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-arch);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .hero__badge {
+    position: absolute;
+    right: -0.5rem;
+    top: 8%;
+    width: clamp(6.5rem, 10vw, 8.5rem);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: var(--space-sm);
+    border-radius: 50%;
+    background-color: var(--color-green);
+    color: var(--color-on-green);
+    font-size: var(--text-sm);
+    line-height: 1.2;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .hero__support {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+  .hero__support-item {
+    margin: 0;
+  }
+  .hero__support-item img {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+  }
+  /* An odd trailing image spans the full width so the grid never looks broken. */
+  .hero__support-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+  .hero__support-item:last-child:nth-child(odd) img {
+    aspect-ratio: 16 / 9;
+  }
+</style>

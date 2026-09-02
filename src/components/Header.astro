@@ -1,10 +1,13 @@
 ---
 /**
- * Site header: a simple wordmark (an emblem + the organization name) plus a
- * small set of in-page anchor links. This is a single-page site, so navigation
- * points at landing-page sections rather than separate routes. The emblem is a
- * lightweight placeholder that a real logo can replace later without changing
- * the layout. No dropdowns, no client-side JS.
+ * Editorial site header: a bordered monogram + wordmark on the left, a
+ * lightweight primary nav on the right. This is a single-page site, so nav
+ * points at landing-page sections; the `navLinks` array is the single place to
+ * add or reorder items as the site grows.
+ *
+ * Mobile uses a native <details> disclosure (no JavaScript): the summary is the
+ * round menu button, and the panel drops below. On desktop the summary is
+ * hidden and the links sit inline. Fully keyboard-accessible either way.
  */
 interface Props {
   settings?: {
@@ -15,113 +18,192 @@ interface Props {
 
 const { settings } = Astro.props
 const orgName = settings?.organizationName || 'Universal Design Coalition'
-const emblem = settings?.shortName || 'UDC'
+const monogram = (settings?.shortName || 'UDC').slice(0, 4).toUpperCase()
 
 const navLinks = [
-  { text: 'What is UD', href: '#what-is-universal-design' },
+  { text: 'Why it matters', href: '#why-it-matters' },
   { text: 'In practice', href: '#in-practice' },
   { text: 'Resources', href: '#resources' },
-  { text: 'Contact', href: '#contact' },
+  { text: 'Sponsors', href: '#sponsors' },
+  { text: 'Get involved', href: '#contact' },
 ]
 ---
 
 <header class="site-header">
   <div class="site-header__inner">
     <a class="wordmark" href="#top" aria-label={`${orgName} — home`}>
-      <span class="wordmark__emblem" aria-hidden="true">{emblem}</span>
+      <span class="wordmark__mark" aria-hidden="true">
+        {monogram.split('').map((letter) => <span>{letter}</span>)}
+      </span>
       <span class="wordmark__name">{orgName}</span>
     </a>
-    <nav aria-label="Primary">
-      <ul class="nav-list">
-        {navLinks.map((link) => (
-          <li><a href={link.href}>{link.text}</a></li>
-        ))}
-      </ul>
-    </nav>
+
+    <details class="nav">
+      <summary class="nav__toggle" aria-label="Menu">
+        <span class="nav__toggle-bars" aria-hidden="true"></span>
+      </summary>
+      <nav class="nav__panel" aria-label="Primary">
+        <ul class="nav__list">
+          {navLinks.map((link) => (
+            <li><a href={link.href}>{link.text}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </details>
   </div>
 </header>
 
 <style>
   .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    background-color: color-mix(in srgb, var(--color-background) 90%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-bg);
   }
 
   .site-header__inner {
     max-width: var(--wide-width);
     margin-inline: auto;
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-md);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-md);
   }
 
+  /* ---- Wordmark ---- */
   .wordmark {
     display: inline-flex;
     align-items: center;
     gap: var(--space-sm);
     text-decoration: none;
-    color: var(--color-primary-strong);
+    color: var(--color-green-dark);
   }
 
-  .wordmark__emblem {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    background-color: var(--color-primary);
-    color: var(--color-primary-contrast);
+  .wordmark__mark {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1.5px solid var(--color-green);
+    border-radius: 4px;
+    font-family: var(--font-serif);
+    font-weight: 600;
     font-size: 0.8125rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    line-height: 1;
+    color: var(--color-green);
     flex-shrink: 0;
+  }
+  /* Center a 3-letter monogram nicely in the 2x2 grid. */
+  .wordmark__mark span:first-child {
+    grid-column: 1 / -1;
   }
 
   .wordmark__name {
     font-weight: 700;
-    font-size: var(--text-base);
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    max-width: 12ch;
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    text-transform: uppercase;
+    max-width: 16ch;
   }
 
-  .nav-list {
+  /* ---- Nav (desktop) ---- */
+  .nav {
+    /* reset details defaults */
+  }
+  .nav__toggle {
+    display: none;
+  }
+  .nav__list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-md);
+    align-items: center;
+    gap: var(--space-lg);
   }
-
-  .nav-list a {
-    color: var(--color-text-muted);
+  .nav__list a {
+    color: var(--color-text);
     text-decoration: none;
-    font-size: var(--text-sm);
-    font-weight: 500;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding-block: 0.25rem;
+    border-bottom: 2px solid transparent;
+  }
+  .nav__list a:hover {
+    color: var(--color-green-dark);
+    border-bottom-color: var(--color-gold);
   }
 
-  .nav-list a:hover {
-    color: var(--color-primary-strong);
-  }
-
-  /* On narrow screens keep only the emblem and let the nav wrap below — no
-     hamburger, no JS. */
-  @media (max-width: 40rem) {
+  /* ---- Nav (mobile disclosure) ---- */
+  @media (max-width: 52rem) {
     .site-header__inner {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: var(--space-sm);
+      align-items: center;
     }
-    .nav-list {
-      gap: var(--space-sm) var(--space-md);
+    .nav__toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      border-radius: 50%;
+      background-color: var(--color-green);
+      color: var(--color-on-green);
+      cursor: pointer;
+      list-style: none;
+    }
+    .nav__toggle::-webkit-details-marker {
+      display: none;
+    }
+    .nav__toggle-bars,
+    .nav__toggle-bars::before,
+    .nav__toggle-bars::after {
+      display: block;
+      width: 1.1rem;
+      height: 2px;
+      background-color: var(--color-on-green);
+      border-radius: 2px;
+      position: relative;
+    }
+    .nav__toggle-bars::before,
+    .nav__toggle-bars::after {
+      content: '';
+      position: absolute;
+      left: 0;
+    }
+    .nav__toggle-bars::before {
+      top: -6px;
+    }
+    .nav__toggle-bars::after {
+      top: 6px;
+    }
+
+    .nav__panel {
+      position: absolute;
+      right: var(--space-md);
+      left: var(--space-md);
+      margin-top: var(--space-sm);
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-soft);
+      padding: var(--space-sm);
+      z-index: 30;
+    }
+    .nav__list {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .nav__list a {
+      display: block;
+      padding: var(--space-sm) var(--space-sm);
+      border-bottom: 1px solid var(--color-border);
+    }
+    .nav__list li:last-child a {
+      border-bottom: 0;
     }
   }
 </style>

@@ -1,0 +1,156 @@
+---
+/**
+ * A modular editorial narrative block. One component, several layout variants,
+ * so the story sections (What is Universal Design, Why it matters, Who it
+ * helps, and any future ones) create visual rhythm instead of repeating an
+ * identical text block.
+ *
+ *   variant="statement"   → large serif statement + compact supporting copy
+ *   variant="image-right" → copy left, rounded image right
+ *   variant="image-left"  → rounded image left, copy right (source order stays
+ *                            copy-first for a sensible reading order)
+ *   variant="plain"       → single confident reading column
+ *
+ * Renders nothing without a heading or body, so optional CMS sections vanish.
+ * An `image` variant with no image falls back to a plain column automatically.
+ */
+import { urlFor } from '../lib/sanity'
+
+interface Props {
+  id?: string
+  eyebrow?: string
+  heading?: string
+  body?: string
+  image?: { asset?: unknown; alt?: string }
+  variant?: 'statement' | 'image-left' | 'image-right' | 'plain'
+  tone?: 'default' | 'panel'
+}
+
+const {
+  id,
+  eyebrow,
+  heading,
+  body,
+  image,
+  variant = 'plain',
+  tone = 'default',
+} = Astro.props
+
+const paragraphs = (body ?? '')
+  .split(/\n\s*\n/)
+  .map((p) => p.trim())
+  .filter(Boolean)
+
+const hasContent = !!(heading || paragraphs.length)
+
+const hasImage = !!image?.asset
+const imageUrl = hasImage
+  ? urlFor(image).width(1100).height(1100).fit('crop').auto('format').url()
+  : null
+
+// An image variant with no image behaves as plain.
+const resolved = (variant === 'image-left' || variant === 'image-right') && !imageUrl
+  ? 'plain'
+  : variant
+---
+
+{
+  hasContent && (
+    <section
+      id={id}
+      class:list={['story', `story--${resolved}`, tone === 'panel' && 'story--panel']}
+    >
+      <div class="story__inner section-shell">
+        <div class="story__text">
+          {eyebrow && <p class="eyebrow story__eyebrow">{eyebrow}</p>}
+          {heading && <h2 class="display story__heading">{heading}</h2>}
+          {resolved === 'statement' && <span class="accent-rule"></span>}
+          <div class="story__body">
+            {paragraphs.map((p) => (
+              <p>{p}</p>
+            ))}
+          </div>
+        </div>
+
+        {imageUrl && (resolved === 'image-left' || resolved === 'image-right') && (
+          <figure class="story__media">
+            <img src={imageUrl} alt={image?.alt ?? ''} width="1100" height="1100" loading="lazy" decoding="async" />
+          </figure>
+        )}
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .story {
+    padding-block: var(--space-2xl);
+  }
+  .story--panel {
+    background-color: var(--color-bg-alt);
+  }
+
+  .story__eyebrow {
+    margin-bottom: var(--space-sm);
+  }
+  .story__heading {
+    font-size: var(--text-3xl);
+    margin: 0 0 var(--space-md);
+    max-width: 20ch;
+  }
+  .story__body p {
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    max-width: 60ch;
+  }
+  .story__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* ---- statement: big heading, compact copy beside it ---- */
+  @media (min-width: 60rem) {
+    .story--statement .story__inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-2xl);
+      align-items: start;
+    }
+    .story--statement .story__heading {
+      font-size: var(--text-4xl);
+      margin: 0;
+    }
+    .story--statement .story__body {
+      padding-top: var(--space-sm);
+    }
+  }
+
+  /* ---- image split ---- */
+  .story--image-left .story__inner,
+  .story--image-right .story__inner {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 52rem) {
+    .story--image-left .story__inner,
+    .story--image-right .story__inner {
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2xl);
+    }
+    .story--image-left .story__media {
+      order: -1;
+    }
+  }
+
+  .story__media {
+    margin: 0;
+  }
+  .story__media img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-soft);
+  }
+</style>

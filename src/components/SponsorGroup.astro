@@ -1,0 +1,127 @@
+---
+/**
+ * One tier of sponsors/partners: a small tier label and a clean, borderless row
+ * of logos normalized to a consistent visual height with `object-fit: contain`,
+ * so mixed aspect ratios read as one tidy set. Logos link out when a URL
+ * exists and fall back to the organization name when no logo is uploaded.
+ * `prominent` gives the presenting tier a larger logo size.
+ */
+import { urlFor } from '../lib/sanity'
+
+interface Sponsor {
+  name?: string
+  logo?: { asset?: unknown }
+  url?: string
+}
+interface Props {
+  label?: string
+  items: Sponsor[]
+  prominent?: boolean
+}
+
+const { label, items, prominent = false } = Astro.props
+const sponsors = (items ?? []).filter(Boolean)
+
+function logoUrl(sponsor: Sponsor): string | null {
+  return sponsor.logo?.asset
+    ? urlFor(sponsor.logo).width(600).fit('max').auto('format').url()
+    : null
+}
+---
+
+{
+  sponsors.length > 0 && (
+    <div class:list={['group', prominent && 'group--prominent']}>
+      {label && <p class="group__label">{label}</p>}
+      <ul class="group__logos">
+        {sponsors.map((sponsor) => {
+          const url = logoUrl(sponsor)
+          const name = sponsor.name ?? 'Partner'
+          return (
+            <li class="group__item">
+              {sponsor.url ? (
+                <a href={sponsor.url} target="_blank" rel="noopener noreferrer" class="group__link">
+                  {url ? (
+                    <img src={url} alt={name} loading="lazy" decoding="async" />
+                  ) : (
+                    <span class="group__name">{name}</span>
+                  )}
+                  <span class="sr-only"> — visit website (opens in a new tab)</span>
+                </a>
+              ) : url ? (
+                <img src={url} alt={name} loading="lazy" decoding="async" />
+              ) : (
+                <span class="group__name">{name}</span>
+              )}
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
+<style>
+  .group + .group {
+    margin-top: var(--space-xl);
+  }
+
+  .group__label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .group__logos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xl) var(--space-2xl);
+  }
+
+  .group__item {
+    display: flex;
+    align-items: center;
+  }
+
+  .group__link {
+    display: inline-flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+  }
+
+  .group__item img {
+    height: 2.75rem;
+    width: auto;
+    max-width: 12rem;
+    object-fit: contain;
+  }
+  .group--prominent .group__item img {
+    height: 4rem;
+    max-width: 15rem;
+  }
+
+  .group__name {
+    font-weight: 600;
+    font-size: var(--text-lg);
+    color: var(--color-text);
+  }
+
+  @media (max-width: 40rem) {
+    .group__logos {
+      gap: var(--space-lg) var(--space-xl);
+    }
+    .group__item img {
+      height: 2.25rem;
+    }
+    .group--prominent .group__item img {
+      height: 3rem;
+    }
+  }
+</style>

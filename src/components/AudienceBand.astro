@@ -1,0 +1,124 @@
+---
+/**
+ * "Designed for everyone" — a horizontal band communicating the breadth of
+ * people Universal Design serves. Not a persona/sales grid: a single calm line
+ * of icon + label pairs. Data-driven, so the list can grow or change in Sanity
+ * without touching layout. Icons are decorative; the label carries the meaning.
+ */
+import Icon from './Icon.astro'
+
+interface Props {
+  audience?: {
+    heading?: string
+    intro?: string
+    items?: { label?: string; iconKey?: string }[]
+  } | null
+}
+
+const { audience } = Astro.props
+const items = (audience?.items ?? []).filter((i) => i?.label)
+const heading = audience?.heading ?? 'Designed for everyone'
+---
+
+{
+  items.length > 0 && (
+    <section class="audience" aria-label={heading}>
+      <div class="audience__inner section-shell">
+        <div class="audience__lead">
+          <h2 class="audience__heading">{heading}</h2>
+          {audience?.intro && <p class="audience__intro">{audience.intro}</p>}
+        </div>
+        <ul class="audience__list">
+          {items.map((item) => (
+            <li class="audience__item">
+              {item.iconKey && (
+                <span class="audience__icon">
+                  <Icon name={item.iconKey} size={30} />
+                </span>
+              )}
+              <span class="audience__label">{item.label}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .audience {
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+    padding-block: var(--space-xl);
+  }
+
+  .audience__inner {
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+  @media (min-width: 60rem) {
+    .audience__inner {
+      grid-template-columns: minmax(9rem, 0.5fr) 1.5fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .audience__heading {
+    font-size: var(--text-xl);
+    margin: 0;
+  }
+  .audience__intro {
+    margin: var(--space-xs) 0 0;
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+  }
+
+  .audience__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg) var(--space-md);
+  }
+  @media (min-width: 40rem) {
+    .audience__list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  /* On wide screens, a single horizontal line with dividers. */
+  @media (min-width: 60rem) {
+    .audience__list {
+      grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+      gap: var(--space-md);
+    }
+    .audience__item + .audience__item {
+      border-left: 1px solid var(--color-border);
+    }
+  }
+
+  .audience__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    padding-inline: var(--space-sm);
+    text-align: center;
+  }
+
+  .audience__icon {
+    color: var(--color-gold);
+    display: inline-flex;
+  }
+
+  .audience__label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text);
+    line-height: 1.25;
+    max-width: 12ch;
+  }
+</style>

@@ -1,0 +1,103 @@
+---
+/**
+ * The benefits of Universal Design, shown as a light, scannable editorial list
+ * rather than a wall of identical boxes: a thin gold rule, an optional icon, a
+ * short title, and a one-line description. The list can grow or shrink in
+ * Sanity; the grid adapts.
+ */
+import Icon from './Icon.astro'
+
+interface Props {
+  data?: {
+    heading?: string
+    intro?: string
+    items?: { title?: string; description?: string; iconKey?: string }[]
+  } | null
+}
+
+const { data } = Astro.props
+const items = (data?.items ?? []).filter((i) => i?.title)
+---
+
+{
+  items.length > 0 && (
+    <section class="benefits">
+      <div class="benefits__inner section-shell">
+        {(data?.heading || data?.intro) && (
+          <header class="benefits__header">
+            {data?.heading && <h2 class="display benefits__heading">{data.heading}</h2>}
+            {data?.intro && <p class="benefits__intro">{data.intro}</p>}
+          </header>
+        )}
+        <ul class="benefits__list">
+          {items.map((item) => (
+            <li class="benefit">
+              <div class="benefit__top">
+                {item.iconKey && (
+                  <span class="benefit__icon" aria-hidden="true"><Icon name={item.iconKey} size={22} /></span>
+                )}
+                <h3 class="benefit__title">{item.title}</h3>
+              </div>
+              {item.description && <p class="benefit__desc">{item.description}</p>}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .benefits {
+    padding-block: var(--space-2xl);
+  }
+
+  .benefits__header {
+    max-width: var(--content-width);
+    margin-bottom: var(--space-xl);
+  }
+  .benefits__heading {
+    font-size: var(--text-2xl);
+    margin: 0 0 var(--space-sm);
+  }
+  .benefits__intro {
+    color: var(--color-muted);
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .benefits__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-lg) var(--space-xl);
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+
+  .benefit {
+    padding-top: var(--space-sm);
+    border-top: 2px solid var(--color-gold);
+  }
+  .benefit__top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-xs);
+  }
+  .benefit__icon {
+    color: var(--color-green);
+    display: inline-flex;
+  }
+  .benefit__title {
+    font-size: var(--text-base);
+    font-weight: 650;
+    margin: 0;
+  }
+  .benefit__desc {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: var(--text-base);
+    max-width: none;
+  }
+</style>

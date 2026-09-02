@@ -26,6 +26,14 @@ export const landingPage = defineType({
         }),
 
         defineField({
+        name: 'headingAccent',
+        title: 'Heading Accent',
+        type: 'string',
+        description:
+            'Optional. The final words of the headline, shown in green italic (e.g. "real life."). Leave blank for a single-color headline.',
+        }),
+
+        defineField({
         name: 'subheading',
         title: 'Subheading',
         type: 'text',
@@ -33,11 +41,29 @@ export const landingPage = defineType({
         }),
 
         defineField({
+        name: 'badge',
+        title: 'Image Badge',
+        type: 'string',
+        description:
+            'Optional short phrase shown in a green circle over the main image (e.g. "Better for everyone. Today and tomorrow.").',
+        }),
+
+        defineField({
         name: 'image',
-        title: 'Hero Image',
+        title: 'Hero Image (main)',
         type: 'imageWithAlt',
         description:
-            'Shown beside the headline on desktop. Choose an everyday, welcoming scene — a home, a public space, people of different ages moving through it.',
+            'The large image beside the headline. Choose an everyday, welcoming scene — a home, a public space, people of different ages moving through it.',
+        }),
+
+        defineField({
+        name: 'supportingImages',
+        title: 'Hero Images (supporting)',
+        type: 'array',
+        description:
+            'Optional. Up to three smaller images shown in a collage beneath the main image (e.g. a kitchen detail, a bathroom, people on a path).',
+        of: [{type: 'imageWithAlt'}],
+        validation: (Rule) => Rule.max(3),
         }),
 
         defineField({
@@ -143,10 +169,67 @@ export const landingPage = defineType({
     }),
 
     defineField({
+      name: 'audience',
+      title: 'Designed For Everyone',
+      type: 'object',
+      description:
+        'A short band showing the range of people Universal Design serves. Communicates "for everyone", not separate customer types.',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'intro',
+          title: 'Intro (optional)',
+          type: 'string',
+        }),
+        defineField({
+          name: 'items',
+          title: 'Groups',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'iconKey',
+                  title: 'Icon',
+                  type: 'string',
+                  options: {
+                    list: [
+                      {title: 'Stroller (new parents)', value: 'stroller'},
+                      {title: 'Briefcase (professionals)', value: 'briefcase'},
+                      {title: 'Older adult', value: 'elder'},
+                      {title: 'Recovering from injury', value: 'injury'},
+                      {title: 'Accessibility', value: 'accessibility'},
+                      {title: 'Child / teen', value: 'child'},
+                      {title: 'Community', value: 'community'},
+                    ],
+                  },
+                }),
+              ],
+              preview: {
+                select: {title: 'label', subtitle: 'iconKey'},
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    defineField({
       name: 'principles',
       title: 'Principles / Benefits',
       type: 'object',
-      description: 'The core benefits of Universal Design, shown as a set of cards.',
+      description: 'The core benefits of Universal Design, shown as a light editorial list.',
       fields: [
         defineField({
           name: 'heading',
@@ -177,6 +260,20 @@ export const landingPage = defineType({
                   name: 'description',
                   title: 'Short Description',
                   type: 'string',
+                }),
+                defineField({
+                  name: 'iconKey',
+                  title: 'Icon (optional)',
+                  type: 'string',
+                  options: {
+                    list: [
+                      {title: 'Home', value: 'home'},
+                      {title: 'Shield', value: 'shield'},
+                      {title: 'Accessibility', value: 'accessibility'},
+                      {title: 'Community', value: 'community'},
+                      {title: 'Older adult', value: 'elder'},
+                    ],
+                  },
                 }),
               ],
               preview: {
@@ -221,6 +318,24 @@ export const landingPage = defineType({
                   validation: (Rule) => Rule.required(),
                 }),
                 defineField({
+                  name: 'iconKey',
+                  title: 'Icon (optional)',
+                  type: 'string',
+                  options: {
+                    list: [
+                      {title: 'Kitchen', value: 'kitchen'},
+                      {title: 'Bath', value: 'bath'},
+                      {title: 'Whole home', value: 'home'},
+                    ],
+                  },
+                }),
+                defineField({
+                  name: 'description',
+                  title: 'Short Description (optional)',
+                  type: 'text',
+                  rows: 2,
+                }),
+                defineField({
                   name: 'image',
                   title: 'Photo',
                   type: 'imageWithAlt',
@@ -232,6 +347,15 @@ export const landingPage = defineType({
                   title: 'Features',
                   type: 'array',
                   of: [{type: 'string'}],
+                }),
+                defineField({
+                  name: 'link',
+                  title: 'Link (optional)',
+                  type: 'object',
+                  fields: [
+                    defineField({name: 'text', title: 'Link Text', type: 'string'}),
+                    defineField({name: 'link', title: 'Link URL', type: 'string'}),
+                  ],
                 }),
               ],
               preview: {
@@ -251,7 +375,16 @@ export const landingPage = defineType({
       name: 'fallPrevention',
       title: 'Fall Prevention',
       type: 'object',
+      description:
+        'Shown as a three-panel feature: a short statement (with optional image), the main heading + body, and a short reassuring line.',
       fields: [
+        defineField({
+          name: 'statement',
+          title: 'Statement (optional)',
+          type: 'string',
+          description:
+            'A short, warm statement for the green panel (e.g. "Small choices today create freedom tomorrow.").',
+        }),
         defineField({
           name: 'heading',
           title: 'Heading',
@@ -264,11 +397,27 @@ export const landingPage = defineType({
           rows: 5,
         }),
         defineField({
+          name: 'reassurance',
+          title: 'Reassurance (optional)',
+          type: 'string',
+          description:
+            'A short reassuring line for the sage panel (e.g. "Safer spaces. Stronger communities. A better quality of life for all.").',
+        }),
+        defineField({
+          name: 'link',
+          title: 'Learn More Link (optional)',
+          type: 'object',
+          fields: [
+            defineField({name: 'text', title: 'Link Text', type: 'string'}),
+            defineField({name: 'link', title: 'Link URL', type: 'string'}),
+          ],
+        }),
+        defineField({
           name: 'image',
           title: 'Fall Prevention Image (optional)',
           type: 'imageWithAlt',
           description:
-            'Optional. A calm, everyday scene — good lighting, a clear hallway, a step-free entry. Used only if it improves the layout.',
+            'Optional. A calm, everyday scene — good lighting, a clear hallway, a step-free entry. Shown in the green panel.',
         }),
       ],
     }),
@@ -336,6 +485,13 @@ export const landingPage = defineType({
           name: 'buttonLink',
           title: 'Button Link',
           type: 'string',
+        }),
+        defineField({
+          name: 'image',
+          title: 'Image (optional)',
+          type: 'imageWithAlt',
+          description:
+            'Optional image shown beside the closing message (e.g. a welcoming path or community space).',
         }),
       ],
     }),

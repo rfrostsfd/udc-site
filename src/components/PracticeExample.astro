@@ -1,0 +1,137 @@
+---
+/**
+ * A single "in practice" example (Kitchen, Bath, Whole Home, …). Imagery is the
+ * dominant element: a rounded photo with a small circular icon badge, then a
+ * name, an optional short description, and concrete feature bullets.
+ *
+ * Everything but the name is optional:
+ *   - no image → the icon badge stands in, the card still reads cleanly
+ *   - no features → just image + description
+ * The section can hold any number of examples; the grid adapts.
+ */
+import { urlFor } from '../lib/sanity'
+import Icon from './Icon.astro'
+
+interface Props {
+  space: {
+    name?: string
+    iconKey?: string
+    image?: { asset?: unknown; alt?: string }
+    description?: string
+    features?: string[]
+    link?: { text?: string; link?: string }
+  }
+}
+
+const { space } = Astro.props
+const features = (space.features ?? []).filter(Boolean)
+const imageUrl = space.image?.asset
+  ? urlFor(space.image).width(760).height(560).fit('crop').auto('format').url()
+  : null
+const link = space.link
+---
+
+<article class="practice">
+  <div class="practice__media">
+    {imageUrl ? (
+      <img src={imageUrl} alt={space.image?.alt ?? ''} width="760" height="560" loading="lazy" decoding="async" />
+    ) : (
+      <div class="practice__media-fallback" aria-hidden="true"></div>
+    )}
+    {space.iconKey && (
+      <span class="practice__badge" aria-hidden="true"><Icon name={space.iconKey} size={26} /></span>
+    )}
+  </div>
+
+  <div class="practice__body">
+    <h3 class="practice__name">{space.name}</h3>
+    {space.description && <p class="practice__desc">{space.description}</p>}
+    {features.length > 0 && (
+      <ul class="practice__features">
+        {features.map((feature) => (
+          <li>{feature}</li>
+        ))}
+      </ul>
+    )}
+    {link?.text && link?.link && (
+      <a class="text-link practice__link" href={link.link}>{link.text}</a>
+    )}
+  </div>
+</article>
+
+<style>
+  .practice {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .practice__media {
+    position: relative;
+    margin-bottom: var(--space-md);
+  }
+  .practice__media img,
+  .practice__media-fallback {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+  .practice__media-fallback {
+    background: linear-gradient(135deg, var(--color-sage-soft), var(--color-bg-alt));
+  }
+
+  .practice__badge {
+    position: absolute;
+    left: var(--space-md);
+    top: var(--space-md);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-green);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .practice__name {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-xs);
+  }
+  .practice__desc {
+    color: var(--color-muted);
+    margin: 0 0 var(--space-sm);
+    font-size: var(--text-base);
+  }
+
+  .practice__features {
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+  .practice__features li {
+    position: relative;
+    padding-left: 1.4rem;
+    color: var(--color-muted);
+    font-size: var(--text-base);
+  }
+  .practice__features li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background-color: var(--color-gold);
+  }
+
+  .practice__link {
+    margin-top: auto;
+  }
+</style>

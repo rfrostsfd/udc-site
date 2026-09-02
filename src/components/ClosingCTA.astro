@@ -1,0 +1,103 @@
+---
+/**
+ * The page's closing composition: a deep-green rounded panel with a short
+ * message and a single action — a clear, designed endpoint. An optional image
+ * sits alongside the text; without it the message centers on its own.
+ */
+import { urlFor } from '../lib/sanity'
+import CTA from './CTA.astro'
+
+interface Props {
+  data?: {
+    heading?: string
+    body?: string
+    buttonText?: string
+    buttonLink?: string
+    image?: { asset?: unknown; alt?: string }
+  } | null
+}
+
+const { data } = Astro.props
+const hasContent = !!(data?.heading || data?.body || data?.buttonText)
+
+const imageUrl = data?.image?.asset
+  ? urlFor(data.image).width(1000).height(900).fit('crop').auto('format').url()
+  : null
+---
+
+{
+  hasContent && (
+    <section id="contact" class="closing">
+      <div class="closing__panel section-shell" class:list={[imageUrl && 'closing__panel--split']}>
+        {imageUrl && (
+          <figure class="closing__media">
+            <img src={imageUrl} alt={data?.image?.alt ?? ''} width="1000" height="900" loading="lazy" decoding="async" />
+          </figure>
+        )}
+        <div class="closing__text">
+          {data?.heading && <h2 class="display closing__heading">{data.heading}</h2>}
+          {data?.body && <p class="closing__body">{data.body}</p>}
+          {data?.buttonText && data?.buttonLink && (
+            <CTA text={data.buttonText} link={data.buttonLink} variant="inverse" />
+          )}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .closing {
+    padding: var(--space-xl) var(--space-md) var(--space-2xl);
+  }
+
+  .closing__panel {
+    background-color: var(--color-green);
+    color: var(--color-on-green);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  /* No image → centered message. */
+  .closing__panel:not(.closing__panel--split) {
+    max-width: var(--content-width);
+    text-align: center;
+  }
+
+  .closing__panel--split {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 52rem) {
+    .closing__panel--split {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: var(--space-2xl);
+    }
+  }
+
+  .closing__media {
+    margin: 0;
+  }
+  .closing__media img {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+  }
+
+  .closing__heading {
+    font-size: var(--text-3xl);
+    color: var(--color-on-green);
+    margin: 0 0 var(--space-md);
+  }
+  .closing__body {
+    font-size: var(--text-lg);
+    color: color-mix(in srgb, var(--color-on-green) 88%, transparent);
+    margin: 0 0 var(--space-lg);
+    max-width: 46ch;
+  }
+  .closing__panel:not(.closing__panel--split) .closing__body {
+    margin-inline: auto;
+  }
+</style>

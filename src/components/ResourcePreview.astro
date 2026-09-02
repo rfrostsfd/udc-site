@@ -1,0 +1,83 @@
+---
+/**
+ * A low-profile resource tile for the landing page: a small category label, the
+ * title, a short description, and a "learn more" link. Kept intentionally quiet
+ * so the resources section supports the story without dominating it. The full
+ * list lives on a future /resources page.
+ */
+interface Props {
+  resource: {
+    title?: string
+    description?: string
+    category?: string
+    url?: string
+  }
+}
+
+const CATEGORY_LABELS: Record<string, string> = {
+  'universal-design': 'Universal Design',
+  'fall-prevention': 'Fall Prevention',
+  'home-modification': 'Home Modification',
+  education: 'Education',
+  community: 'Community',
+  other: 'Resource',
+}
+
+const { resource } = Astro.props
+const categoryLabel = resource.category ? CATEGORY_LABELS[resource.category] : null
+const isHttp = !!resource.url && /^https?:\/\//.test(resource.url)
+---
+
+<article class="resource">
+  {categoryLabel && <p class="resource__cat">{categoryLabel}</p>}
+  <h3 class="resource__title">{resource.title}</h3>
+  {resource.description && <p class="resource__desc">{resource.description}</p>}
+  {resource.url && (
+    <a
+      class="text-link resource__link"
+      href={resource.url}
+      {...(isHttp ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+    >
+      Learn more{isHttp && <span class="sr-only"> (opens in a new tab)</span>}
+    </a>
+  )}
+</article>
+
+<style>
+  .resource {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--space-lg);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  .resource__cat {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-green);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .resource__title {
+    font-size: var(--text-lg);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .resource__desc {
+    color: var(--color-muted);
+    font-size: var(--text-base);
+    margin: 0 0 var(--space-md);
+  }
+
+  .resource__link {
+    margin-top: auto;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    font-size: var(--text-sm);
+  }
+</style>
