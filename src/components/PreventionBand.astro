@@ -47,7 +47,7 @@ const link = data?.link
         {hasStatement && (
           <div class="panel panel--statement">
             {data?.statement && <p class="display panel__statement">{data.statement}</p>}
-            {data?.statement && imageUrl && <span class="accent-rule accent-rule--gold"></span>}
+            {data?.statement && <span class="accent-rule accent-rule--gold"></span>}
             {imageUrl && (
               <figure class="panel__figure">
                 <img src={imageUrl} alt={data?.image?.alt ?? ''} width="900" height="680" loading="lazy" decoding="async" />
