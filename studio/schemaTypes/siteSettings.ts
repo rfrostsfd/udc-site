@@ -21,6 +21,15 @@ export const siteSettings = defineType({
     }),
 
     defineField({
+      name: 'logo',
+      title: 'Header Logo',
+      type: 'image',
+      description:
+        'Optional. Upload a logo to replace the text logo in the header. A PNG or SVG with a transparent background works best. If left empty, the header shows the monogram and organization name.',
+      options: {hotspot: false},
+    }),
+
+    defineField({
       name: 'email',
       title: 'Email Address',
       type: 'string',

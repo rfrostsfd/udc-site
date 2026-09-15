@@ -9,16 +9,24 @@
  * round menu button, and the panel drops below. On desktop the summary is
  * hidden and the links sit inline. Fully keyboard-accessible either way.
  */
+import { urlFor } from '../lib/sanity'
+
 interface Props {
   settings?: {
     organizationName?: string
     shortName?: string
+    logo?: { asset?: unknown }
   } | null
 }
 
 const { settings } = Astro.props
 const orgName = settings?.organizationName || 'Universal Design Coalition'
 const monogram = (settings?.shortName || 'UDC').slice(0, 4).toUpperCase()
+
+// When a logo is uploaded in Site Settings it replaces the monogram + wordmark.
+const logoUrl = settings?.logo?.asset
+  ? urlFor(settings.logo).height(120).fit('max').auto('format').url()
+  : null
 
 const navLinks = [
   { text: 'Why it matters', href: '#why-it-matters' },
@@ -31,12 +39,18 @@ const navLinks = [
 
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="wordmark" href="#top" aria-label={`${orgName} — home`}>
-      <span class="wordmark__mark" aria-hidden="true">
-        {monogram.split('').map((letter) => <span>{letter}</span>)}
-      </span>
-      <span class="wordmark__name">{orgName}</span>
-    </a>
+    {logoUrl ? (
+      <a class="wordmark wordmark--logo" href="#top">
+        <img class="wordmark__logo" src={logoUrl} alt={`${orgName} — home`} height="48" />
+      </a>
+    ) : (
+      <a class="wordmark" href="#top" aria-label={`${orgName} — home`}>
+        <span class="wordmark__mark" aria-hidden="true">
+          {monogram.split('').map((letter) => <span>{letter}</span>)}
+        </span>
+        <span class="wordmark__name">{orgName}</span>
+      </a>
+    )}
 
     <details class="nav">
       <summary class="nav__toggle" aria-label="Menu">
@@ -75,6 +89,21 @@ const navLinks = [
     gap: var(--space-sm);
     text-decoration: none;
     color: var(--color-green-dark);
+  }
+
+  /* Uploaded logo replaces the monogram + wordmark. Sized by height so any
+     logo aspect ratio sits cleanly in the header. */
+  .wordmark__logo {
+    height: 48px;
+    width: auto;
+    max-width: min(260px, 60vw);
+    object-fit: contain;
+    display: block;
+  }
+  @media (max-width: 52rem) {
+    .wordmark__logo {
+      height: 40px;
+    }
   }
 
   .wordmark__mark {
