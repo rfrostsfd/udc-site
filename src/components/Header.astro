@@ -25,7 +25,7 @@ const monogram = (settings?.shortName || 'UDC').slice(0, 4).toUpperCase()
 
 // When a logo is uploaded in Site Settings it replaces the monogram + wordmark.
 const logoUrl = settings?.logo?.asset
-  ? urlFor(settings.logo).height(120).fit('max').auto('format').url()
+  ? urlFor(settings.logo).height(200).fit('max').auto('format').url()
   : null
 
 const navLinks = [
@@ -94,15 +94,15 @@ const navLinks = [
   /* Uploaded logo replaces the monogram + wordmark. Sized by height so any
      logo aspect ratio sits cleanly in the header. */
   .wordmark__logo {
-    height: 48px;
+    height: 72px;
     width: auto;
-    max-width: min(260px, 60vw);
+    max-width: min(340px, 72vw);
     object-fit: contain;
     display: block;
   }
   @media (max-width: 52rem) {
     .wordmark__logo {
-      height: 40px;
+      height: 56px;
     }
   }
 
