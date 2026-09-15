@@ -120,6 +120,13 @@ export const landingPage = defineType({
           type: 'text',
           rows: 6,
         }),
+        defineField({
+          name: 'image',
+          title: 'Image (optional)',
+          type: 'imageWithAlt',
+          description:
+            'Optional. Shown beside the text. A clear, everyday scene that shows good design in a real space.',
+        }),
       ],
     }),
 
@@ -138,6 +145,13 @@ export const landingPage = defineType({
           title: 'Body',
           type: 'text',
           rows: 6,
+        }),
+        defineField({
+          name: 'image',
+          title: 'Image (optional)',
+          type: 'imageWithAlt',
+          description:
+            'Optional. Shown beside the text. A warm scene of people living comfortably in a well-designed home or community.',
         }),
       ],
     }),

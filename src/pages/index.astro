@@ -105,6 +105,7 @@ const ungroupedSponsors = sponsors.filter(
     eyebrow="What is Universal Design?"
     heading={page?.whatIsUniversalDesign?.heading}
     body={page?.whatIsUniversalDesign?.body}
+    image={page?.whatIsUniversalDesign?.image}
     variant="statement"
   />
 
@@ -112,7 +113,8 @@ const ungroupedSponsors = sponsors.filter(
     id="why-it-matters"
     heading={page?.whyItMatters?.heading}
     body={page?.whyItMatters?.body}
-    variant="plain"
+    image={page?.whyItMatters?.image}
+    variant="image-left"
     tone="panel"
   />
 
@@ -121,7 +123,7 @@ const ungroupedSponsors = sponsors.filter(
     heading={page?.whoItHelps?.heading}
     body={page?.whoItHelps?.body}
     image={page?.whoItHelps?.image}
-    variant="image-left"
+    variant="image-right"
   />
 
   <BenefitsStrip data={page?.principles} />

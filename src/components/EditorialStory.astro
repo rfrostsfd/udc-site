@@ -52,13 +52,25 @@ const imageUrl = hasImage
 const resolved = (variant === 'image-left' || variant === 'image-right') && !imageUrl
   ? 'plain'
   : variant
+
+// The statement variant can also carry an image (shown on the right). Track
+// whether media will actually render so the layout only splits into two
+// columns when there's an image; otherwise it stays a single clean column.
+const showMedia =
+  !!imageUrl &&
+  (resolved === 'image-left' || resolved === 'image-right' || resolved === 'statement')
 ---
 
 {
   hasContent && (
     <section
       id={id}
-      class:list={['story', `story--${resolved}`, tone === 'panel' && 'story--panel']}
+      class:list={[
+        'story',
+        `story--${resolved}`,
+        showMedia && 'story--has-media',
+        tone === 'panel' && 'story--panel',
+      ]}
     >
       <div class="story__inner section-shell">
         <div class="story__text">
@@ -72,7 +84,7 @@ const resolved = (variant === 'image-left' || variant === 'image-right') && !ima
           </div>
         </div>
 
-        {imageUrl && (resolved === 'image-left' || resolved === 'image-right') && (
+        {showMedia && (
           <figure class="story__media">
             <img src={imageUrl} alt={image?.alt ?? ''} width="1100" height="1100" loading="lazy" decoding="async" />
           </figure>
@@ -108,20 +120,21 @@ const resolved = (variant === 'image-left' || variant === 'image-right') && !ima
     margin-bottom: 0;
   }
 
-  /* ---- statement: big heading, compact copy beside it ---- */
+  /* ---- statement: big serif heading. Splits to text + image only when an
+     image is present; otherwise stays a single clean column. ---- */
   @media (min-width: 60rem) {
-    .story--statement .story__inner {
-      display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: var(--space-2xl);
-      align-items: start;
-    }
     .story--statement .story__heading {
       font-size: var(--text-4xl);
       margin: 0;
     }
     .story--statement .story__body {
       padding-top: var(--space-sm);
+    }
+    .story--statement.story--has-media .story__inner {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: var(--space-2xl);
+      align-items: center;
     }
   }
 
