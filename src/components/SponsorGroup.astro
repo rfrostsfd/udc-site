@@ -80,7 +80,13 @@ function logoUrl(sponsor: Sponsor): string | null {
     margin: 0;
     padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+    /* Fill the row up to 4 columns, then wrap. auto-fit makes the cards grow
+       to fill the space when there are fewer than 4; the max() floor keeps a
+       sensible card width so they wrap to 3 / 2 / 1 on smaller screens. */
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(max(11rem, (100% - 3 * var(--space-md)) / 4), 1fr)
+    );
     gap: var(--space-md);
   }
 
