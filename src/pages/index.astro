@@ -109,6 +109,8 @@ const ungroupedSponsors = sponsors.filter(
     variant="statement"
   />
 
+  <PreventionBand id="fall-prevention" data={page?.fallPrevention} />
+
   <EditorialStory
     id="why-it-matters"
     heading={page?.whyItMatters?.heading}
@@ -127,8 +129,6 @@ const ungroupedSponsors = sponsors.filter(
   />
 
   <BenefitsStrip data={page?.principles} />
-
-  <PreventionBand id="fall-prevention" data={page?.fallPrevention} />
 
   {spaces.length > 0 && (
     <section id="in-practice" class="feature">
