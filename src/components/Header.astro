@@ -5,9 +5,10 @@
  * points at landing-page sections; the `navLinks` array is the single place to
  * add or reorder items as the site grows.
  *
- * Mobile uses a native <details> disclosure (no JavaScript): the summary is the
- * round menu button, and the panel drops below. On desktop the summary is
- * hidden and the links sit inline. Fully keyboard-accessible either way.
+ * On desktop the links sit inline. On mobile they collapse behind a round menu
+ * button, toggled with a hidden checkbox (no JavaScript): the button is a label
+ * for the checkbox, and :checked reveals the dropdown. Keyboard-accessible via
+ * the focusable checkbox, whose focus ring is forwarded to the visible button.
  */
 import { urlFor } from '../lib/sanity'
 
@@ -28,12 +29,17 @@ const logoUrl = settings?.logo?.asset
   ? urlFor(settings.logo).height(200).fit('max').auto('format').url()
   : null
 
+// In-page anchor menu. Each href points at a section id on the landing page;
+// this array is the single place to add, remove, or reorder items.
 const navLinks = [
+  { text: 'Home', href: '#top' },
+  { text: 'About', href: '#what-is-universal-design' },
   { text: 'Why it matters', href: '#why-it-matters' },
+  { text: 'Falls prevention', href: '#fall-prevention' },
   { text: 'In practice', href: '#in-practice' },
   { text: 'Resources', href: '#resources' },
   { text: 'Sponsors', href: '#sponsors' },
-  { text: 'Get involved', href: '#contact' },
+  { text: 'Contact', href: '#contact' },
 ]
 ---
 
@@ -52,10 +58,11 @@ const navLinks = [
       </a>
     )}
 
-    <details class="nav">
-      <summary class="nav__toggle" aria-label="Menu">
-        <span class="nav__toggle-bars" aria-hidden="true"></span>
-      </summary>
+    <div class="nav">
+      <input class="nav__cb" type="checkbox" id="site-nav-toggle" aria-label="Toggle navigation menu" />
+      <label class="nav__toggle" for="site-nav-toggle" aria-hidden="true">
+        <span class="nav__toggle-bars"></span>
+      </label>
       <nav class="nav__panel" aria-label="Primary">
         <ul class="nav__list">
           {navLinks.map((link) => (
@@ -63,7 +70,7 @@ const navLinks = [
           ))}
         </ul>
       </nav>
-    </details>
+    </div>
   </div>
 </header>
 
@@ -135,10 +142,12 @@ const navLinks = [
     max-width: 16ch;
   }
 
-  /* ---- Nav (desktop) ---- */
+  /* ---- Nav (desktop: links inline) ---- */
   .nav {
-    /* reset details defaults */
+    display: flex;
+    align-items: center;
   }
+  .nav__cb,
   .nav__toggle {
     display: none;
   }
@@ -149,15 +158,16 @@ const navLinks = [
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
   .nav__list a {
     color: var(--color-text);
     text-decoration: none;
-    font-size: 0.8125rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
+    white-space: nowrap;
     padding-block: 0.25rem;
     border-bottom: 2px solid transparent;
   }
@@ -166,11 +176,13 @@ const navLinks = [
     border-bottom-color: var(--color-gold);
   }
 
-  /* ---- Nav (mobile disclosure) ---- */
-  @media (max-width: 52rem) {
-    .site-header__inner {
-      align-items: center;
+  /* ---- Nav (mobile: checkbox-toggled dropdown) ---- */
+  @media (max-width: 64rem) {
+    .nav {
+      position: relative;
     }
+
+    /* The round menu button. */
     .nav__toggle {
       display: inline-flex;
       align-items: center;
@@ -181,10 +193,6 @@ const navLinks = [
       background-color: var(--color-green);
       color: var(--color-on-green);
       cursor: pointer;
-      list-style: none;
-    }
-    .nav__toggle::-webkit-details-marker {
-      display: none;
     }
     .nav__toggle-bars,
     .nav__toggle-bars::before,
@@ -209,11 +217,33 @@ const navLinks = [
       top: 6px;
     }
 
-    .nav__panel {
+    /* Invisible checkbox overlaying the button: handles click + keyboard,
+       while its focus ring is forwarded to the visible button below. */
+    .nav__cb {
+      display: block;
       position: absolute;
-      right: var(--space-md);
-      left: var(--space-md);
-      margin-top: var(--space-sm);
+      top: 0;
+      right: 0;
+      width: 2.75rem;
+      height: 2.75rem;
+      margin: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 2;
+    }
+    .nav__cb:focus-visible ~ .nav__toggle {
+      outline: 3px solid var(--color-focus);
+      outline-offset: 2px;
+    }
+
+    .nav__panel {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: calc(100% + var(--space-sm));
+      width: max-content;
+      min-width: 12rem;
+      max-width: 78vw;
       background-color: var(--color-surface);
       border: 1px solid var(--color-border);
       border-radius: var(--radius-md);
@@ -221,6 +251,10 @@ const navLinks = [
       padding: var(--space-sm);
       z-index: 30;
     }
+    .nav__cb:checked ~ .nav__panel {
+      display: block;
+    }
+
     .nav__list {
       flex-direction: column;
       align-items: stretch;
@@ -228,7 +262,7 @@ const navLinks = [
     }
     .nav__list a {
       display: block;
-      padding: var(--space-sm) var(--space-sm);
+      padding: var(--space-sm);
       border-bottom: 1px solid var(--color-border);
     }
     .nav__list li:last-child a {
