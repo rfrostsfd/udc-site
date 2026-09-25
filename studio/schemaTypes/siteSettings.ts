@@ -30,6 +30,15 @@ export const siteSettings = defineType({
     }),
 
     defineField({
+      name: 'favicon',
+      title: 'Favicon',
+      type: 'image',
+      description:
+        'The small icon shown in the browser tab. Upload a square PNG, at least 512×512, with a simple mark that reads well when tiny. If left empty, the built-in default icon is used.',
+      options: {hotspot: false},
+    }),
+
+    defineField({
       name: 'email',
       title: 'Email Address',
       type: 'string',

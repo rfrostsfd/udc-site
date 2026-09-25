@@ -22,6 +22,7 @@ const settings = await sanityClient.fetch(`
     organizationName,
     shortName,
     logo,
+    favicon,
     email,
     phone,
     address,
@@ -41,6 +42,14 @@ const shareImage = settings?.defaultSeo?.shareImage
   ? urlFor(settings.defaultSeo.shareImage).width(1200).height(630).fit('crop').url()
   : null
 
+// A favicon uploaded in Site Settings overrides the static default icon.
+const faviconUrl = settings?.favicon?.asset
+  ? urlFor(settings.favicon).width(64).height(64).fit('crop').format('png').url()
+  : null
+const appleTouchUrl = settings?.favicon?.asset
+  ? urlFor(settings.favicon).width(180).height(180).fit('crop').format('png').url()
+  : null
+
 const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href
 ---
 
@@ -49,8 +58,17 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    {faviconUrl ? (
+      <>
+        <link rel="icon" type="image/png" href={faviconUrl} />
+        <link rel="apple-touch-icon" href={appleTouchUrl} />
+      </>
+    ) : (
+      <>
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="icon" href="/favicon.ico" />
+      </>
+    )}
     <title>{pageTitle}</title>
     {metaDescription && <meta name="description" content={metaDescription} />}
     <link rel="canonical" href={canonical} />
