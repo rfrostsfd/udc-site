@@ -1,0 +1,106 @@
+---
+/**
+ * Text-size accessibility control: three levels (Normal / Large / Larger) that
+ * scale the root font size, so all rem-based text and spacing grow together.
+ * The choice is saved in localStorage and re-applied on the next visit.
+ *
+ * This is progressive enhancement: it needs a small amount of JavaScript to
+ * change and remember the setting (something CSS alone cannot do). The early
+ * inline script in the page <head> applies a saved choice before first paint;
+ * this script wires the buttons and reflects the active level with aria-pressed.
+ */
+const levels = [
+  { scale: 'normal', label: 'Normal text size' },
+  { scale: 'large', label: 'Large text size' },
+  { scale: 'larger', label: 'Larger text size' },
+]
+---
+
+<div class="textsize" role="group" aria-label="Text size">
+  <span class="textsize__label" aria-hidden="true">Text size</span>
+  {levels.map((level) => (
+    <button type="button" class="textsize__btn" data-scale={level.scale} aria-label={level.label} aria-pressed="false">
+      <span aria-hidden="true">A</span>
+    </button>
+  ))}
+</div>
+
+<script>
+  const KEY = 'udc-text-scale'
+  const root = document.documentElement
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>('.textsize__btn')
+  )
+
+  function apply(scale: string) {
+    if (scale && scale !== 'normal') root.dataset.textScale = scale
+    else delete root.dataset.textScale
+    for (const btn of buttons) {
+      btn.setAttribute('aria-pressed', String(btn.dataset.scale === scale))
+    }
+  }
+
+  let current = 'normal'
+  try {
+    current = localStorage.getItem(KEY) || 'normal'
+  } catch {}
+  apply(current)
+
+  for (const btn of buttons) {
+    btn.addEventListener('click', () => {
+      const scale = btn.dataset.scale || 'normal'
+      apply(scale)
+      try {
+        localStorage.setItem(KEY, scale)
+      } catch {}
+    })
+  }
+</script>
+
+<style>
+  .textsize {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+  .textsize__label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--color-muted);
+  }
+  .textsize__btn {
+    display: inline-grid;
+    place-items: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+    line-height: 1;
+  }
+  .textsize__btn span {
+    font-weight: 700;
+  }
+  .textsize__btn[data-scale='normal'] span {
+    font-size: 0.8rem;
+  }
+  .textsize__btn[data-scale='large'] span {
+    font-size: 1rem;
+  }
+  .textsize__btn[data-scale='larger'] span {
+    font-size: 1.2rem;
+  }
+  .textsize__btn:hover {
+    border-color: var(--color-green);
+  }
+  .textsize__btn[aria-pressed='true'] {
+    background-color: var(--color-green);
+    border-color: var(--color-green);
+    color: var(--color-on-green);
+  }
+</style>
