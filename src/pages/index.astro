@@ -49,8 +49,8 @@ const [page, resources, sponsors, events] = await Promise.all([
   `),
   sanityClient.fetch(`
     *[_type == "resource" && active == true]
-      | order(featured desc, sortOrder asc, title asc){
-        title, description, category, url, featured
+      | order(sortOrder asc, title asc){
+        title, description, category, url, featured, sortOrder
       }
   `),
   sanityClient.fetch(
@@ -76,7 +76,6 @@ const spaces = (inPractice?.spaces ?? []).filter((s: any) => s?.name)
 // rest live on a future /resources page.
 const RESOURCE_LIMIT = 6
 const featuredResources = resources.slice(0, RESOURCE_LIMIT)
-const hasMoreResources = resources.length > RESOURCE_LIMIT
 
 // Group sponsors by level when levels are in use; otherwise a single flat group.
 const SPONSOR_LEVELS = [
