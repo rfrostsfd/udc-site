@@ -32,12 +32,12 @@ const logoUrl = settings?.logo?.asset
 // In-page anchor menu. Each href points at a section id on the landing page;
 // this array is the single place to add, remove, or reorder items.
 const navLinks = [
-  { text: 'Home', href: '#top' },
+  { text: 'Home', href: '/' },
   { text: 'About', href: '#what-is-universal-design' },
   { text: 'Why it matters', href: '#why-it-matters' },
   { text: 'Falls prevention', href: '#fall-prevention' },
   { text: 'In practice', href: '#in-practice' },
-  { text: 'Resources', href: '#resources' },
+  { text: 'Resources', href: '/resources' },
   { text: 'Sponsors', href: '#sponsors' },
   { text: 'Contact', href: '#contact' },
 ]
@@ -50,7 +50,7 @@ const navLinks = [
         <img class="wordmark__logo" src={logoUrl} alt={`${orgName} — home`} height="48" />
       </a>
     ) : (
-      <a class="wordmark" href="#top" aria-label={`${orgName} — home`}>
+      <a class="wordmark" href="/" aria-label={`${orgName} — home`}>
         <span class="wordmark__mark" aria-hidden="true">
           {monogram.split('').map((letter) => <span>{letter}</span>)}
         </span>
