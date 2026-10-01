@@ -10,8 +10,13 @@ import ResourceCard from '../components/ResourceCard.astro'
 
 const resources = await sanityClient.fetch(`
   *[_type == "resource" && active == true]
-    | order(featured desc, sortOrder asc, title asc){
-      title, description, category, url, featured
+    | order(sortOrder asc, featured desc, title asc){
+      title,
+      description,
+      category,
+      url,
+      featured,
+      sortOrder
     }
 `)
 ---
