@@ -1,3 +1,9 @@
+## Project Context
+
+The Universal Design Coalition design brief is the source of truth for product, design, content, and CMS decisions:
+
+@DESIGN_CONTEXT.md
+
 ## Development
 
 When starting the dev server, use background mode:

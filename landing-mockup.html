@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Universal Design Coalition Florida — Landing Page Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#f4f0e7; --bg-alt:#ece5d7; --surface:#fcfaf5;
+    --text:#2a2a26; --muted:#6a655b;
+    --green:#3c5a43; --green-dark:#2b4232; --sage:#9aa98a; --sage-soft:#dfe4d5;
+    --gold:#b8862f; --border:#e2dccf; --on-green:#f4f0e7;
+    --font-sans:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-serif:'Fraunces','Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+    --wide:1120px;
+  }
+  *,*::before,*::after{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-sans);
+    font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  img{max-width:100%;display:block}
+  a{color:inherit;text-decoration:none}
+  h1,h2,h3{margin:0;line-height:1.08;letter-spacing:-0.01em}
+  .display{font-family:var(--font-serif);font-weight:600;letter-spacing:-0.015em;line-height:1.02}
+  .wrap{max-width:var(--wide);margin-inline:auto;padding-inline:28px}
+  .rule{display:block;width:52px;height:3px;background:var(--gold);border-radius:2px;margin:18px 0}
+  .eyebrow{text-transform:uppercase;letter-spacing:.11em;font-size:12px;font-weight:600;color:var(--muted);margin:0}
+  .tlink{display:inline-flex;align-items:center;gap:.5em;font-size:12px;font-weight:600;
+    letter-spacing:.09em;text-transform:uppercase;color:var(--green-dark)}
+  .tlink svg{width:18px;height:18px}
+  .dots{background-image:radial-gradient(var(--gold) 1.4px,transparent 1.4px);
+    background-size:11px 11px;opacity:.5}
+
+  /* ---------- Header ---------- */
+  header{background:var(--bg)}
+  .hdr{display:flex;align-items:center;justify-content:space-between;gap:24px;padding-block:22px}
+  .brand{display:flex;align-items:center;gap:14px}
+  .mono{display:grid;grid-template-columns:1fr 1fr;place-items:center;width:52px;height:52px;
+    border:1.5px solid var(--green);border-radius:4px;font-family:var(--font-serif);
+    font-weight:600;font-size:15px;color:var(--green);line-height:1}
+  .mono b:first-child{grid-column:1/-1;font-weight:600}
+  .brand__name{font-weight:700;font-size:12px;letter-spacing:.06em;line-height:1.3;text-transform:uppercase;color:var(--green-dark)}
+  nav.primary ul{display:flex;align-items:center;gap:26px;list-style:none;margin:0;padding:0}
+  nav.primary a{display:inline-flex;flex-direction:column;align-items:center;gap:6px;
+    font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text)}
+  nav.primary svg{width:22px;height:22px;color:var(--green);opacity:.85}
+  .menu-btn{width:52px;height:52px;border-radius:50%;background:var(--green);border:0;
+    display:inline-grid;place-items:center;cursor:pointer}
+  .menu-btn span,.menu-btn span::before,.menu-btn span::after{content:'';display:block;width:18px;height:2px;
+    background:var(--on-green);border-radius:2px;position:relative}
+  .menu-btn span::before{position:absolute;top:-6px}.menu-btn span::after{position:absolute;top:6px}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;padding-block:24px 64px}
+  .hero__grid{display:grid;grid-template-columns:0.82fr 1.18fr;gap:56px;align-items:center}
+  .hero__title{font-size:76px;color:var(--text);max-width:8ch}
+  .hero__title .accent{color:var(--green);font-style:italic;font-weight:600}
+  .hero__lead{color:var(--muted);font-size:17px;max-width:34ch;margin:0 0 26px}
+  .hero__collage{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .ph{position:relative;overflow:hidden;background:linear-gradient(150deg,var(--sage-soft),var(--bg-alt));
+    display:grid;place-items:center;color:var(--muted);font-size:12px;font-style:italic;text-align:center;padding:10px}
+  .ph span{opacity:.75;max-width:16ch}
+  .hero__primary{grid-column:1/-1;aspect-ratio:16/11;border-radius:46% 46% 8% 8%/32% 32% 8% 8%;
+    background:linear-gradient(160deg,#cdd6c0,#e7e0d1 60%,#d8ccae)}
+  .hero__badge{position:absolute;right:2%;top:9%;width:132px;height:132px;border-radius:50%;
+    background:var(--green);color:var(--on-green);display:grid;place-items:center;text-align:center;
+    font-family:var(--font-serif);font-size:15px;line-height:1.25;padding:16px;
+    box-shadow:0 12px 30px rgba(38,36,33,.14)}
+  .hero__s1{aspect-ratio:5/4;border-radius:16px;background:linear-gradient(160deg,#e4d9c4,#cfc3a6)}
+  .hero__s2{aspect-ratio:5/4;border-radius:16px;background:linear-gradient(160deg,#dfe4dd,#c3ccc0)}
+  .hero__s3{grid-column:1/-1;aspect-ratio:16/8;border-radius:16px;
+    background:linear-gradient(160deg,#cdd7c5,#bcae93)}
+  .hero__dots{position:absolute;right:0;top:8px;width:120px;height:70px}
+
+  /* ---------- Audience ---------- */
+  .aud{border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding-block:34px}
+  .aud__grid{display:grid;grid-template-columns:minmax(150px,.5fr) 2fr;gap:40px;align-items:center}
+  .aud h2{font-size:24px}
+  .aud__list{display:grid;grid-template-columns:repeat(6,1fr);list-style:none;margin:0;padding:0}
+  .aud__item{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding-inline:14px}
+  .aud__item+.aud__item{border-left:1px solid var(--border)}
+  .aud__item svg{width:30px;height:30px;color:var(--gold)}
+  .aud__item span{font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;line-height:1.3;max-width:12ch}
+
+  /* ---------- Prevention band ---------- */
+  .prev{display:grid;grid-template-columns:1fr 1.25fr .9fr}
+  .prev .panel{padding:44px 36px;display:flex;flex-direction:column;justify-content:center;gap:18px}
+  .panel--green{background:var(--green);color:var(--on-green)}
+  .panel--green .display{font-size:30px;color:var(--on-green)}
+  .panel--green .living{aspect-ratio:16/10;border-radius:12px;
+    background:linear-gradient(160deg,#e8e2d3,#cdd3c4)}
+  .panel--cream{background:var(--surface)}
+  .panel--cream h2{font-size:29px;color:var(--text)}
+  .panel--cream p{color:var(--muted);font-size:15px;max-width:34ch;margin:0}
+  .panel--sage{background:var(--sage);color:var(--green-dark);position:relative;overflow:hidden}
+  .panel--sage svg.shield{width:34px;height:34px;color:var(--green-dark)}
+  .panel--sage p{font-size:19px;font-weight:600;line-height:1.32;margin:0;color:var(--green-dark)}
+  .panel--sage .dots{position:absolute;right:-10px;bottom:-6px;width:120px;height:90px;opacity:.4}
+
+  /* ---------- In practice ---------- */
+  .prac{padding-block:70px;background:var(--bg)}
+  .prac__grid{display:grid;grid-template-columns:minmax(150px,.55fr) 2fr;gap:52px}
+  .prac__lead h2{font-size:34px}
+  .prac__lead p{color:var(--muted);margin:0 0 22px}
+  .prac__cards{display:grid;grid-template-columns:repeat(3,1fr);gap:34px}
+  .card__sketch{position:relative;aspect-ratio:4/3;border-radius:16px;background:var(--surface);
+    border:1px solid var(--border);overflow:hidden}
+  .card__sketch svg.room{position:absolute;inset:0;width:100%;height:100%;color:#b9b09c}
+  .card__badge{position:absolute;left:14px;top:14px;width:44px;height:44px;border-radius:50%;
+    display:grid;place-items:center;color:#fff;box-shadow:0 6px 16px rgba(38,36,33,.14)}
+  .badge--gold{background:var(--gold)}.badge--green{background:var(--green)}.badge--slate{background:#7d8aa0}
+  .card__badge svg{width:22px;height:22px}
+  .card h3{font-size:13px;letter-spacing:.06em;text-transform:uppercase;margin:16px 0 10px}
+  .card ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+  .card li{position:relative;padding-left:18px;color:var(--muted);font-size:14px}
+  .card li::before{content:'';position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold)}
+
+  /* ---------- Resources + partners ---------- */
+  .res{border-top:1px solid var(--border);padding-block:56px}
+  .res__grid{display:grid;grid-template-columns:.8fr 2fr .9fr;gap:40px;align-items:start}
+  .res__lead h2,.res__partners h2{font-size:26px}
+  .res__lead p,.res__partners p{color:var(--muted);font-size:14px;max-width:26ch}
+  .res__lead .tlink,.res__partners .tlink{margin-top:16px}
+  .res__cards{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .rcard{background:var(--bg-alt);border-radius:12px;padding:18px;display:flex;flex-direction:column;height:100%}
+  .rcard .cat{text-transform:uppercase;letter-spacing:.08em;font-size:10px;font-weight:600;color:var(--green);margin:0 0 10px}
+  .rcard h4{font-size:14px;margin:0 0 18px;line-height:1.3}
+  .rcard .tlink{margin-top:auto;font-size:10px}
+
+  /* ---------- Sponsors ---------- */
+  .spon{padding-block:20px 56px}
+  .spon__row{display:grid;grid-template-columns:auto 1fr 1fr;gap:36px;align-items:center}
+  .spon__present{display:flex;align-items:center;gap:18px}
+  .vlabel{writing-mode:vertical-rl;transform:rotate(180deg);text-transform:uppercase;letter-spacing:.14em;
+    font-size:9px;font-weight:700;color:var(--muted)}
+  .logo{font-family:var(--font-serif);font-weight:600;color:#5b5750;line-height:1;text-align:center}
+  .logo small{display:block;font-family:var(--font-sans);font-weight:600;font-size:9px;letter-spacing:.05em}
+  .spon__group{display:flex;flex-direction:column;gap:14px}
+  .spon__group .glabel{text-transform:uppercase;letter-spacing:.1em;font-size:9px;font-weight:700;color:var(--muted);text-align:center}
+  .spon__logos{display:flex;align-items:center;justify-content:space-around;gap:22px;flex-wrap:wrap}
+  .present-logo{font-size:26px}
+  .support-logo{font-size:18px}
+  .partner-logo{font-size:16px}
+
+  /* ---------- Closing + footer ---------- */
+  .closing{padding:36px 28px 0}
+  .closing__panel{max-width:var(--wide);margin-inline:auto;background:var(--green);color:var(--on-green);
+    border-radius:26px;display:grid;grid-template-columns:.85fr 1.15fr;overflow:hidden;align-items:center}
+  .closing__img{aspect-ratio:16/10;background:linear-gradient(160deg,#5c7a5f,#2f4a37);height:100%;min-height:220px}
+  .closing__body{padding:44px 40px}
+  .closing__body h2{font-size:32px;color:var(--on-green);margin:0 0 14px}
+  .closing__body p{color:rgba(244,240,231,.88);font-size:16px;max-width:42ch;margin:0 0 22px}
+  .cta{display:inline-flex;align-items:center;gap:.5em;background:var(--surface);color:var(--green-dark);
+    font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:.85em 1.4em;border-radius:12px}
+
+  footer{padding:56px 28px 40px}
+  .foot{max-width:var(--wide);margin-inline:auto;display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:32px;align-items:start}
+  .foot__brand{display:flex;flex-direction:column;gap:14px}
+  .foot__mark{font-family:var(--font-serif);font-weight:600;font-size:26px;color:var(--green-dark);letter-spacing:.02em}
+  .foot__mark small{display:block;font-family:var(--font-sans);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:4px}
+  .foot__email{color:var(--muted);font-size:14px}
+  .socials{display:flex;gap:10px;margin-top:6px}
+  .socials a{width:34px;height:34px;border-radius:50%;background:var(--bg-alt);display:grid;place-items:center;color:var(--green)}
+  .socials svg{width:16px;height:16px}
+  .foot ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
+  .foot ul a{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text)}
+  .foot__legal{grid-column:1/-1;font-size:11px;color:var(--muted);border-top:1px solid var(--border);padding-top:20px;margin-top:8px}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    nav.primary,.spon__present .vlabel{display:none}
+    .hero__grid,.aud__grid,.prev,.prac__grid,.res__grid,.spon__row,.closing__panel,.foot{grid-template-columns:1fr}
+    .hero__title{font-size:52px}
+    .aud__list{grid-template-columns:repeat(3,1fr);gap:22px 0}
+    .aud__item:nth-child(3n+1){border-left:0}
+    .prac__cards,.res__cards{grid-template-columns:1fr}
+    .res__cards{gap:14px}
+    .foot__legal{grid-column:auto}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header>
+  <div class="wrap hdr">
+    <a class="brand" href="#">
+      <span class="mono" aria-hidden="true"><b>U</b><b>D</b><b>C</b></span>
+      <span class="brand__name">Universal<br />Design<br />Coalition Florida</span>
+    </a>
+    <nav class="primary" aria-label="Primary">
+      <ul>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21c-5-3-8-6-8-10a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 7-8 10z"/></svg>Why it matters</a></li>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="8" r="2.5"/><circle cx="16" cy="9" r="2"/><path d="M4 19a5 5 0 0 1 10 0M14 19a4 4 0 0 1 6-3"/></svg>In practice</a></li>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 5h7v14H4zM20 5h-7v14h7zM11 5a2 2 0 0 0-2-2H4v2M13 5a2 2 0 0 1 2-2h5v2"/></svg>Resources</a></li>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>Sponsors</a></li>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21c-5-3-8-6-8-10a4 4 0 0 1 8-1 4 4 0 0 1 8 1c0 4-3 7-8 10z"/></svg>Get involved</a></li>
+        <li><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="3"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>About UDC</a></li>
+      </ul>
+    </nav>
+    <button class="menu-btn" aria-label="Menu"><span></span></button>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <p class="eyebrow" style="margin-bottom:14px">Universal Design Coalition · Florida</p>
+      <h1 class="display hero__title">Design that fits <span class="accent">real life.</span></h1>
+      <span class="rule"></span>
+      <p class="hero__lead">Universal Design creates homes and communities that are usable by all people, at every stage of life.</p>
+      <a class="tlink" href="#">See how it makes an impact
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a>
+    </div>
+    <div class="hero__collage">
+      <div class="dots hero__dots" aria-hidden="true"></div>
+      <div class="ph hero__primary"><span>Welcoming home entry &amp; step-free path</span>
+        <div class="hero__badge display">Better for everyone. Today and tomorrow.</div>
+      </div>
+      <div class="ph hero__s1"><span>Reachable kitchen drawer</span></div>
+      <div class="ph hero__s2"><span>Curbless accessible shower</span></div>
+      <div class="ph hero__s3"><span>Parent &amp; child with a stroller, moving easily through a space</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AUDIENCE ============ -->
+<section class="aud">
+  <div class="wrap aud__grid">
+    <h2>Designed for<br />everyone</h2>
+    <ul class="aud__list">
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5h3l3 8M6 13h11a5 5 0 0 0-6-8M6 13l-1 4M17 13l1 4"/><circle cx="7" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg><span>New parents on the go</span></li>
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11"/><path d="M9 8V6a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2M4 13h16"/></svg><span>Busy professionals</span></li>
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="5" r="1.5"/><path d="M12 8v6M12 14l-3 6M12 14l3 6M9 11h6M17 8v13"/></svg><span>Older adults</span></li>
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10l4-4a2.8 2.8 0 0 1 4 4l-4 4a2.8 2.8 0 0 1-4-4zM11 5l4 4M9 15l4 4"/></svg><span>Recovering from injury</span></li>
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.5"/><path d="M12 8v5h4l2 5M12 13H8l-1 5M6 11h5"/></svg><span>People with disabilities</span></li>
+      <li class="aud__item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1.6"/><path d="M12 8v6M12 14l-3 5M12 14l3 5M8.5 10.5L12 12l3.5-1.5"/></svg><span>Kids &amp; teens</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PREVENTION BAND ============ -->
+<section class="prev">
+  <div class="panel panel--green">
+    <p class="display">Small choices today create freedom tomorrow.</p>
+    <span class="rule" style="margin:2px 0"></span>
+    <div class="ph living"><span style="color:#3c5a43">Bright, open living room</span></div>
+  </div>
+  <div class="panel panel--cream">
+    <h2 class="display">Universal Design is prevention.</h2>
+    <p>Good design can reduce fall risks and support healthy living at home and in our communities.</p>
+    <a class="tlink" href="#">Learn more
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a>
+  </div>
+  <div class="panel panel--sage">
+    <svg class="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>
+    <p>Safer spaces. Stronger communities. A better quality of life for all.</p>
+    <div class="dots" aria-hidden="true"></div>
+  </div>
+</section>
+
+<!-- ============ IN PRACTICE ============ -->
+<section class="prac">
+  <div class="wrap prac__grid">
+    <div class="prac__lead">
+      <h2 class="display">In practice</h2>
+      <span class="rule"></span>
+      <p>Thoughtful details.<br />Lasting impact.</p>
+      <a class="tlink" href="#">Explore examples
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a>
+    </div>
+    <div class="prac__cards">
+      <article class="card">
+        <div class="card__sketch">
+          <svg class="room" viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1"><rect x="24" y="30" width="152" height="90"/><path d="M24 78h152M60 30v48M100 30v48M140 30v48M70 92h30v28H70zM120 92h34v28h-34z"/><path d="M40 40h12M84 40h12M124 40h12"/></svg>
+          <span class="card__badge badge--gold"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16"/><path d="M4 10h16M8 5.5v3M12 5.5v3"/></svg></span>
+        </div>
+        <h3>The Kitchen</h3>
+        <ul><li>Easy-to-reach storage</li><li>Adjustable surfaces</li><li>Clear floor space</li></ul>
+      </article>
+      <article class="card">
+        <div class="card__sketch">
+          <svg class="room" viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1"><rect x="24" y="30" width="152" height="90"/><path d="M110 40v70M110 66h50M60 60a10 10 0 0 1 20 0v50h-20zM50 96h40"/><circle cx="150" cy="48" r="6"/></svg>
+          <span class="card__badge badge--green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11V6a2 2 0 0 1 4 0M4 11h16v2a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4z"/></svg></span>
+        </div>
+        <h3>The Bath</h3>
+        <ul><li>Walk-in showers</li><li>Grab bars that blend in</li><li>Non-slip, comfortable design</li></ul>
+      </article>
+      <article class="card">
+        <div class="card__sketch">
+          <svg class="room" viewBox="0 0 200 150" fill="none" stroke="currentColor" stroke-width="1"><path d="M40 74l60-40 60 40M52 66v54h96V66M88 120V92h24v28"/><path d="M30 120h140"/></svg>
+          <span class="card__badge badge--slate"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 11l8-6 8 6M6 10v9h12v-9"/></svg></span>
+        </div>
+        <h3>The Whole Home</h3>
+        <ul><li>Step-free entrances</li><li>Wider doorways</li><li>Smart, simple layouts</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESOURCES + PARTNERS ============ -->
+<section class="res">
+  <div class="wrap res__grid">
+    <div class="res__lead">
+      <h2 class="display">Helpful<br />resources</h2>
+      <span class="rule"></span>
+      <p>Trusted information to help you learn, plan, and take action.</p>
+      <a class="tlink" href="#">Browse all resources
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a>
+    </div>
+    <div class="res__cards">
+      <div class="rcard"><p class="cat">Community</p><h4>Area Agency on Aging for Southwest Florida</h4><a class="tlink" href="#">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a></div>
+      <div class="rcard"><p class="cat">Community</p><h4>Friendship Centers</h4><a class="tlink" href="#">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a></div>
+      <div class="rcard"><p class="cat">Education</p><h4>Institute for Human Centered Design</h4><a class="tlink" href="#">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a></div>
+      <div class="rcard"><p class="cat">Design</p><h4>Universal Design Living Laboratory</h4><a class="tlink" href="#">Learn more <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a></div>
+    </div>
+    <div class="res__partners">
+      <h2 class="display">Our partners<br />make it possible.</h2>
+      <p style="margin-top:14px">Thank you to our sponsors and community partners.</p>
+      <a class="tlink" href="#">See all sponsors
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M13 9l3 3-3 3"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SPONSOR LOGOS ============ -->
+<section class="spon">
+  <div class="wrap spon__row">
+    <div class="spon__present">
+      <span class="vlabel">Presenting Sponsor</span>
+      <span class="logo present-logo">Pulte<small>H O M E S</small></span>
+    </div>
+    <div class="spon__group">
+      <span class="glabel">Supporting Sponsors</span>
+      <div class="spon__logos">
+        <span class="logo support-logo" style="font-family:var(--font-sans);font-weight:700;color:#1f4e79">LENNAR</span>
+        <span class="logo support-logo">Meritage<small>H O M E S</small></span>
+        <span class="logo support-logo" style="font-style:italic">Toll Brothers</span>
+        <span class="logo support-logo" style="font-family:var(--font-sans);font-weight:700">M/I&nbsp;HOMES</span>
+      </div>
+    </div>
+    <div class="spon__group">
+      <span class="glabel">Community Partners</span>
+      <div class="spon__logos">
+        <span class="logo partner-logo" style="font-family:var(--font-sans);font-weight:800;color:#c8102e">AARP<small style="color:#5b5750">Florida</small></span>
+        <span class="logo partner-logo" style="font-style:italic">The Arc.<small style="font-style:normal">Florida</small></span>
+        <span class="logo partner-logo" style="font-family:var(--font-sans);font-weight:800;color:#1f4e79">NAHB</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING CTA ============ -->
+<section class="closing">
+  <div class="closing__panel">
+    <div class="ph closing__img"><span style="color:#eef1e9">Welcoming community greenway / path</span></div>
+    <div class="closing__body">
+      <h2 class="display">Join the coalition.</h2>
+      <p>Together we can build a Florida where every home and community works beautifully for people of all ages and abilities.</p>
+      <a class="cta" href="#">Get involved
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="width:16px;height:16px"><path d="M5 12h13M13 6l6 6-6 6"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="foot">
+    <div class="foot__brand">
+      <span class="foot__mark">UDC<small>Universal Design Coalition Florida</small></span>
+      <a class="foot__email" href="mailto:info@udcflorida.org">✉&nbsp; info@udcflorida.org</a>
+      <div class="socials">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 9h3V6h-3c-2 0-3 1-3 3v2H9v3h2v6h3v-6h2.5l.5-3H14V9z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="4.5"/><circle cx="12" cy="12" r="3.5"/><circle cx="17" cy="7" r="1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 9v9H4V9h3zM5.5 7.5A1.5 1.5 0 1 1 5.5 4.5a1.5 1.5 0 0 1 0 3zM20 18h-3v-4.5c0-1.2-.5-2-1.6-2-.9 0-1.4.6-1.6 1.2V18h-3V9h3v1.2c.4-.7 1.3-1.4 2.7-1.4 2 0 3.1 1.3 3.1 3.8V18z"/></svg></a>
+      </div>
+    </div>
+    <ul><li><a href="#">About UDC</a></li><li><a href="#">Contact</a></li><li><a href="#">Privacy Policy</a></li></ul>
+    <div></div>
+    <p class="foot__legal">© 2025 Universal Design Coalition Florida</p>
+  </div>
+</footer>
+
+</body>
+</html>
