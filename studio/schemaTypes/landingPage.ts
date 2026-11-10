@@ -108,6 +108,64 @@ export const landingPage = defineType({
     }),
 
     defineField({
+      name: 'audience',
+      title: 'Designed For Everyone',
+      type: 'object',
+      options: {collapsible: true, collapsed: true},
+      description:
+        'A short band showing the range of people Universal Design serves. Communicates "for everyone", not separate customer types.',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'intro',
+          title: 'Intro (optional)',
+          type: 'string',
+        }),
+        defineField({
+          name: 'items',
+          title: 'Groups',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                defineField({
+                  name: 'label',
+                  title: 'Label',
+                  type: 'string',
+                  validation: (Rule) => Rule.required(),
+                }),
+                defineField({
+                  name: 'iconKey',
+                  title: 'Icon',
+                  type: 'string',
+                  options: {
+                    list: [
+                      {title: 'Stroller (new parents)', value: 'stroller'},
+                      {title: 'Briefcase (professionals)', value: 'briefcase'},
+                      {title: 'Older adult', value: 'elder'},
+                      {title: 'Recovering from injury', value: 'injury'},
+                      {title: 'Accessibility', value: 'accessibility'},
+                      {title: 'Child / teen', value: 'child'},
+                      {title: 'Community', value: 'community'},
+                    ],
+                  },
+                }),
+              ],
+              preview: {
+                select: {title: 'label', subtitle: 'iconKey'},
+              },
+            },
+          ],
+        }),
+      ],
+    }),
+
+    defineField({
       name: 'whatIsUniversalDesign',
       title: 'What Is Universal Design?',
       type: 'object',
@@ -184,64 +242,6 @@ export const landingPage = defineType({
           type: 'imageWithAlt',
           description:
             'A warm, everyday scene showing a range of people — children, parents, people carrying things, older adults. Shown beside the text.',
-        }),
-      ],
-    }),
-
-    defineField({
-      name: 'audience',
-      title: 'Designed For Everyone',
-      type: 'object',
-      options: {collapsible: true, collapsed: true},
-      description:
-        'A short band showing the range of people Universal Design serves. Communicates "for everyone", not separate customer types.',
-      fields: [
-        defineField({
-          name: 'heading',
-          title: 'Heading',
-          type: 'string',
-        }),
-        defineField({
-          name: 'intro',
-          title: 'Intro (optional)',
-          type: 'string',
-        }),
-        defineField({
-          name: 'items',
-          title: 'Groups',
-          type: 'array',
-          of: [
-            {
-              type: 'object',
-              fields: [
-                defineField({
-                  name: 'label',
-                  title: 'Label',
-                  type: 'string',
-                  validation: (Rule) => Rule.required(),
-                }),
-                defineField({
-                  name: 'iconKey',
-                  title: 'Icon',
-                  type: 'string',
-                  options: {
-                    list: [
-                      {title: 'Stroller (new parents)', value: 'stroller'},
-                      {title: 'Briefcase (professionals)', value: 'briefcase'},
-                      {title: 'Older adult', value: 'elder'},
-                      {title: 'Recovering from injury', value: 'injury'},
-                      {title: 'Accessibility', value: 'accessibility'},
-                      {title: 'Child / teen', value: 'child'},
-                      {title: 'Community', value: 'community'},
-                    ],
-                  },
-                }),
-              ],
-              preview: {
-                select: {title: 'label', subtitle: 'iconKey'},
-              },
-            },
-          ],
         }),
       ],
     }),
