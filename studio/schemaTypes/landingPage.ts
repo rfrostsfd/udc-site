@@ -193,6 +193,58 @@ export const landingPage = defineType({
     }),
 
     defineField({
+      name: 'fallPrevention',
+      title: 'Fall Prevention',
+      type: 'object',
+      options: {collapsible: true, collapsed: true},
+      description:
+        'Shown as a three-panel feature: a short statement (with optional image), the main heading + body, and a short reassuring line.',
+      fields: [
+        defineField({
+          name: 'statement',
+          title: 'Statement (optional)',
+          type: 'string',
+          description:
+            'A short, warm statement for the green panel (e.g. "Small choices today create freedom tomorrow.").',
+        }),
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'body',
+          title: 'Body',
+          type: 'text',
+          rows: 5,
+        }),
+        defineField({
+          name: 'reassurance',
+          title: 'Reassurance (optional)',
+          type: 'string',
+          description:
+            'A short reassuring line for the sage panel (e.g. "Safer spaces. Stronger communities. A better quality of life for all.").',
+        }),
+        defineField({
+          name: 'link',
+          title: 'Learn More Link (optional)',
+          type: 'object',
+          fields: [
+            defineField({name: 'text', title: 'Link Text', type: 'string'}),
+            defineField({name: 'link', title: 'Link URL', type: 'string'}),
+          ],
+        }),
+        defineField({
+          name: 'image',
+          title: 'Fall Prevention Image (optional)',
+          type: 'imageWithAlt',
+          description:
+            'Optional. A calm, everyday scene — good lighting, a clear hallway, a step-free entry. Shown in the green panel.',
+        }),
+      ],
+    }),
+
+    defineField({
       name: 'whyItMatters',
       title: 'Why It Matters',
       type: 'object',
@@ -390,58 +442,6 @@ export const landingPage = defineType({
               },
             },
           ],
-        }),
-      ],
-    }),
-
-    defineField({
-      name: 'fallPrevention',
-      title: 'Fall Prevention',
-      type: 'object',
-      options: {collapsible: true, collapsed: true},
-      description:
-        'Shown as a three-panel feature: a short statement (with optional image), the main heading + body, and a short reassuring line.',
-      fields: [
-        defineField({
-          name: 'statement',
-          title: 'Statement (optional)',
-          type: 'string',
-          description:
-            'A short, warm statement for the green panel (e.g. "Small choices today create freedom tomorrow.").',
-        }),
-        defineField({
-          name: 'heading',
-          title: 'Heading',
-          type: 'string',
-        }),
-        defineField({
-          name: 'body',
-          title: 'Body',
-          type: 'text',
-          rows: 5,
-        }),
-        defineField({
-          name: 'reassurance',
-          title: 'Reassurance (optional)',
-          type: 'string',
-          description:
-            'A short reassuring line for the sage panel (e.g. "Safer spaces. Stronger communities. A better quality of life for all.").',
-        }),
-        defineField({
-          name: 'link',
-          title: 'Learn More Link (optional)',
-          type: 'object',
-          fields: [
-            defineField({name: 'text', title: 'Link Text', type: 'string'}),
-            defineField({name: 'link', title: 'Link URL', type: 'string'}),
-          ],
-        }),
-        defineField({
-          name: 'image',
-          title: 'Fall Prevention Image (optional)',
-          type: 'imageWithAlt',
-          description:
-            'Optional. A calm, everyday scene — good lighting, a clear hallway, a step-free entry. Shown in the green panel.',
         }),
       ],
     }),
