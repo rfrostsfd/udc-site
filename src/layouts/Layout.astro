@@ -9,6 +9,7 @@ import { urlFor } from '../lib/sanity'
 import Header from '../components/Header.astro'
 import Footer from '../components/Footer.astro'
 import TextSize from '../components/TextSize.astro'
+import BackToTop from '../components/BackToTop.astro'
 import '../styles/global.css'
 
 interface Props {
@@ -110,5 +111,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href
       <slot />
     </main>
     <Footer settings={settings} />
+    <BackToTop />
   </body>
 </html>

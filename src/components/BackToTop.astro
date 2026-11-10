@@ -1,0 +1,78 @@
+---
+/**
+ * Back-to-top control: a small round button fixed to the bottom-right corner.
+ * It is a plain link to `#top`, which browsers treat as the top of the page,
+ * so it needs no JavaScript and works on every page.
+ *
+ * Where scroll-driven animations are supported the button stays hidden until
+ * the visitor has scrolled a little way down, then fades in. Elsewhere it is
+ * simply always visible.
+ */
+---
+
+<a class="to-top" href="#top">
+  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
+    <path d="M12 19V5M5.5 11.5 12 5l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+  <span class="sr-only">Back to top</span>
+</a>
+
+<style>
+  .to-top {
+    position: fixed;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 20;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem; /* comfortable tap target */
+    border-radius: 50%;
+    background-color: var(--color-surface);
+    color: var(--color-green-dark);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-soft);
+    transition: background-color 0.15s ease, color 0.15s ease,
+      border-color 0.15s ease, transform 0.15s ease;
+  }
+  .to-top:hover {
+    background-color: var(--color-green);
+    border-color: var(--color-green);
+    color: var(--color-on-green);
+    transform: translateY(-2px);
+  }
+  .to-top:focus-visible {
+    border-radius: 50%;
+  }
+
+  /* Hidden near the top of the page; fades in once the visitor scrolls down.
+     `visibility` keeps the hidden button out of the keyboard tab order. */
+  @supports (animation-timeline: scroll()) {
+    .to-top {
+      animation: to-top-reveal linear both;
+    }
+    /* Kept in its own rule: the CSS minifier otherwise folds the timeline
+       into the `animation` shorthand, which browsers reject. */
+    a.to-top {
+      animation-timeline: scroll(root);
+      animation-range: 24rem 32rem;
+    }
+  }
+  @keyframes to-top-reveal {
+    from {
+      opacity: 0;
+      visibility: hidden;
+    }
+    to {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
+
+  @media print {
+    .to-top {
+      display: none;
+    }
+  }
+</style>
