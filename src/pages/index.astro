@@ -8,6 +8,7 @@
  *   Why it matters (soft panel) → Who it helps (image split) →
  *   Benefits (light strip) → Fall prevention (three-panel band) →
  *   In practice (lead + example grid) → Events → Resources → Sponsors →
+ *   Support (pale sage donate panel) →
  *   Closing CTA (deep-green finale).
  *
  * Every section is modular and degrades gracefully when its CMS content is
@@ -26,6 +27,7 @@ import PracticeExample from '../components/PracticeExample.astro'
 import EventCard from '../components/EventCard.astro'
 import ResourcePreview from '../components/ResourcePreview.astro'
 import SponsorGroup from '../components/SponsorGroup.astro'
+import SupportBand from '../components/SupportBand.astro'
 import ClosingCTA from '../components/ClosingCTA.astro'
 
 const now = new Date().toISOString()
@@ -44,6 +46,7 @@ const [page, resources, sponsors, events] = await Promise.all([
       fallPrevention,
       resourcesIntro,
       sponsorsIntro,
+      support,
       contactCta
     }
   `),
@@ -218,6 +221,8 @@ const ungroupedSponsors = sponsors.filter(
       </div>
     </section>
   )}
+
+  <SupportBand id="support" data={page?.support} />
 
   <ClosingCTA data={page?.contactCta} />
 </Layout>

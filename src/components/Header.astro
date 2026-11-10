@@ -18,9 +18,10 @@ interface Props {
     shortName?: string
     logo?: { asset?: unknown }
   } | null
+  showDonate?: boolean
 }
 
-const { settings } = Astro.props
+const { settings, showDonate = false } = Astro.props
 const orgName = settings?.organizationName || 'Universal Design Coalition'
 const monogram = (settings?.shortName || 'UDC').slice(0, 4).toUpperCase()
 
@@ -39,6 +40,7 @@ const navLinks = [
   { text: 'In practice', href: '#in-practice' },
   { text: 'Resources', href: '/resources' },
   { text: 'Sponsors', href: '#sponsors' },
+  ...(showDonate ? [{ text: 'Donate', href: '#support' }] : []),
   { text: 'Contact', href: '#contact' },
 ]
 ---

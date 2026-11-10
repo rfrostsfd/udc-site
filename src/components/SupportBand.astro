@@ -1,0 +1,92 @@
+---
+/**
+ * Donation / membership invitation: a pale sage rounded panel with a short
+ * message and a single button that opens the giving page. Deliberately lighter
+ * than the deep-green ClosingCTA that follows, so the two don't compete.
+ * Renders nothing until the button text and link exist in the CMS.
+ */
+import CTA from './CTA.astro'
+
+interface Props {
+  id?: string
+  data?: {
+    heading?: string
+    body?: string
+    buttonText?: string
+    buttonLink?: string
+  } | null
+}
+
+const { id, data } = Astro.props
+const hasAction = !!(data?.buttonText && data?.buttonLink)
+---
+
+{
+  hasAction && (
+    <section id={id} class="support">
+      <div class="support__panel section-shell">
+        <div class="support__text">
+          <p class="eyebrow">Support the Coalition</p>
+          {data?.heading && <h2 class="display support__heading">{data.heading}</h2>}
+          {data?.heading && data?.body && <span class="accent-rule" />}
+          {data?.body && <p class="support__body">{data.body}</p>}
+        </div>
+        <div class="support__action">
+          <CTA text={data?.buttonText} link={data?.buttonLink} />
+          <p class="support__note">You'll finish on our secure giving page.</p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+<style>
+  .support {
+    padding: var(--space-xl) var(--space-md) 0;
+  }
+
+  .support__panel {
+    background-color: var(--color-sage-soft);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    display: grid;
+    gap: var(--space-lg);
+    align-items: center;
+  }
+  @media (min-width: 52rem) {
+    .support__panel {
+      grid-template-columns: 1.4fr auto;
+      gap: var(--space-2xl);
+      padding: var(--space-xl) var(--space-2xl);
+    }
+  }
+
+  .support__heading {
+    font-size: var(--text-2xl);
+    color: var(--color-green-dark);
+    margin: var(--space-sm) 0 0;
+  }
+  /* On the sage tint, muted gray falls short of AA — use the body color. */
+  .support .eyebrow {
+    color: var(--color-text);
+  }
+  .support__body {
+    font-size: var(--text-lg);
+    margin: var(--space-md) 0 0;
+    max-width: 46ch;
+  }
+  .support__heading + .accent-rule + .support__body {
+    margin-top: 0;
+  }
+
+  .support__action {
+    display: grid;
+    gap: var(--space-sm);
+    justify-items: start;
+  }
+  .support__note {
+    font-size: var(--text-sm);
+    margin: 0;
+    max-width: 24ch;
+  }
+</style>

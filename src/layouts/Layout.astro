@@ -32,6 +32,13 @@ const settings = await sanityClient.fetch(`
   }
 `)
 
+// The header only offers a Donate link when the landing page's donate section
+// has a button to land on.
+const hasSupport = await sanityClient.fetch(`
+  defined(*[_type == "landingPage"][0].support.buttonText) &&
+  defined(*[_type == "landingPage"][0].support.buttonLink)
+`)
+
 const orgName = settings?.organizationName ?? 'Universal Design Coalition'
 const pageTitle = title
   ? `${title} · ${settings?.shortName ?? orgName}`
@@ -98,7 +105,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href
         <TextSize />
       </div>
     </div>
-    <Header settings={settings} />
+    <Header settings={settings} showDonate={hasSupport} />
     <main id="main">
       <slot />
     </main>

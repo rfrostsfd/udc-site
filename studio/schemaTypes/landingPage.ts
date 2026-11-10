@@ -475,6 +475,39 @@ export const landingPage = defineType({
     }),
 
     defineField({
+      name: 'support',
+      title: 'Donate / Membership Section',
+      type: 'object',
+      description:
+        'Invites visitors to donate or join. Shown after the sponsors, with one button that opens the giving page. The section stays hidden until the button text and link are filled in.',
+      fields: [
+        defineField({
+          name: 'heading',
+          title: 'Heading',
+          type: 'string',
+        }),
+        defineField({
+          name: 'body',
+          title: 'Body',
+          type: 'text',
+          rows: 3,
+        }),
+        defineField({
+          name: 'buttonText',
+          title: 'Button Text',
+          type: 'string',
+        }),
+        defineField({
+          name: 'buttonLink',
+          title: 'Button Link',
+          type: 'url',
+          description: 'The full web address of the giving page (e.g. the Zeffy link).',
+          validation: (Rule) => Rule.uri({scheme: ['http', 'https']}),
+        }),
+      ],
+    }),
+
+    defineField({
       name: 'contactCta',
       title: 'Closing / Contact CTA',
       type: 'object',
