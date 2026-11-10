@@ -10,6 +10,9 @@ export const landingPage = defineType({
     name: 'hero',
     title: 'Hero',
     type: 'object',
+    // Open by default; every other section starts collapsed so the document
+    // reads as a short list of section titles.
+    options: {collapsible: true, collapsed: false},
     fields: [
         defineField({
         name: 'eyebrow',
@@ -108,6 +111,7 @@ export const landingPage = defineType({
       name: 'whatIsUniversalDesign',
       title: 'What Is Universal Design?',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
@@ -134,6 +138,7 @@ export const landingPage = defineType({
       name: 'whyItMatters',
       title: 'Why It Matters',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
@@ -160,6 +165,7 @@ export const landingPage = defineType({
       name: 'whoItHelps',
       title: 'Who It Helps',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
@@ -186,6 +192,7 @@ export const landingPage = defineType({
       name: 'audience',
       title: 'Designed For Everyone',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       description:
         'A short band showing the range of people Universal Design serves. Communicates "for everyone", not separate customer types.',
       fields: [
@@ -243,6 +250,7 @@ export const landingPage = defineType({
       name: 'principles',
       title: 'Principles / Benefits',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       description: 'The core benefits of Universal Design, shown as a light editorial list.',
       fields: [
         defineField({
@@ -303,6 +311,7 @@ export const landingPage = defineType({
       name: 'inPractice',
       title: 'Universal Design in Practice',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       description:
         'Concrete, real-life examples grouped by space (e.g. Kitchen, Bath, Whole House).',
       fields: [
@@ -389,6 +398,7 @@ export const landingPage = defineType({
       name: 'fallPrevention',
       title: 'Fall Prevention',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       description:
         'Shown as a three-panel feature: a short statement (with optional image), the main heading + body, and a short reassuring line.',
       fields: [
@@ -440,6 +450,7 @@ export const landingPage = defineType({
       name: 'resourcesIntro',
       title: 'Resources Section',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
@@ -459,6 +470,7 @@ export const landingPage = defineType({
       name: 'sponsorsIntro',
       title: 'Sponsors Section',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
@@ -478,6 +490,7 @@ export const landingPage = defineType({
       name: 'support',
       title: 'Donate / Membership Section',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       description:
         'Invites visitors to donate or join. Shown after the sponsors, with one button that opens the giving page. The section stays hidden until the button text and link are filled in.',
       fields: [
@@ -511,6 +524,7 @@ export const landingPage = defineType({
       name: 'contactCta',
       title: 'Closing / Contact CTA',
       type: 'object',
+      options: {collapsible: true, collapsed: true},
       fields: [
         defineField({
           name: 'heading',
