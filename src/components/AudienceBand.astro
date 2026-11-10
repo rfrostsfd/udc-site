@@ -120,5 +120,8 @@ const heading = audience?.heading ?? 'Designed for everyone'
     color: var(--color-text);
     line-height: 1.25;
     max-width: 12ch;
+    /* Grow to fit a single long word (e.g. "Professionals") so it never
+       overflows the box and pulls the label off-center from its icon. */
+    min-width: min-content;
   }
 </style>
