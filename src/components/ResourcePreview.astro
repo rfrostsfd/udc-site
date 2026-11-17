@@ -14,17 +14,8 @@ interface Props {
   }
 }
 
-const CATEGORY_LABELS: Record<string, string> = {
-  'universal-design': 'Universal Design',
-  'fall-prevention': 'Fall Prevention',
-  'home-modification': 'Home Modification',
-  education: 'Education',
-  community: 'Community',
-  other: 'Resource',
-}
-
 const { resource } = Astro.props
-const categoryLabel = resource.category ? CATEGORY_LABELS[resource.category] : null
+const categoryLabel = resource.category ?? null
 const isHttp = !!resource.url && /^https?:\/\//.test(resource.url)
 ---
 

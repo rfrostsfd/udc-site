@@ -23,17 +23,9 @@ export const resource = defineType({
     defineField({
       name: 'category',
       title: 'Category',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Universal Design', value: 'universal-design'},
-          {title: 'Fall Prevention', value: 'fall-prevention'},
-          {title: 'Home Modification', value: 'home-modification'},
-          {title: 'Education', value: 'education'},
-          {title: 'Community', value: 'community'},
-          {title: 'Other', value: 'other'},
-        ],
-      },
+      type: 'reference',
+      to: [{type: 'resourceCategory'}],
+      description: 'Choose a category, or create a new one with "+ Create new".',
     }),
 
     defineField({
@@ -71,7 +63,7 @@ export const resource = defineType({
   preview: {
     select: {
       title: 'title',
-      category: 'category',
+      category: 'category.title',
       active: 'active',
     },
     prepare({title, category, active}) {

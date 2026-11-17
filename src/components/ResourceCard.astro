@@ -16,16 +16,7 @@ interface Props {
 
 const { resource } = Astro.props
 
-const CATEGORY_LABELS: Record<string, string> = {
-  'universal-design': 'Universal Design',
-  'fall-prevention': 'Fall Prevention',
-  'home-modification': 'Home Modification',
-  education: 'Education',
-  community: 'Community',
-  other: 'Other',
-}
-
-const categoryLabel = resource.category ? CATEGORY_LABELS[resource.category] : null
+const categoryLabel = resource.category ?? null
 ---
 
 <article class:list={['resource-card', resource.featured && 'resource-card--featured']}>

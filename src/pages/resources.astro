@@ -13,7 +13,7 @@ const resources = await sanityClient.fetch(`
     | order(sortOrder asc, featured desc, title asc){
       title,
       description,
-      category,
+      "category": category->title,
       url,
       featured,
       sortOrder

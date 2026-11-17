@@ -53,7 +53,7 @@ const [page, resources, sponsors, events] = await Promise.all([
   sanityClient.fetch(`
     *[_type == "resource" && active == true]
       | order(sortOrder asc, title asc){
-        title, description, category, url, featured, sortOrder
+        title, description, "category": category->title, url, featured, sortOrder
       }
   `),
   sanityClient.fetch(
