@@ -1,7 +1,7 @@
 ---
 /**
- * Donation / membership invitation: a pale sage rounded panel with a short
- * message and a single button that opens the giving page. Deliberately lighter
+ * Membership invitation: a pale sage rounded panel with a short
+ * message and a single button that opens the membership page. Deliberately lighter
  * than the deep-green ClosingCTA that follows, so the two don't compete.
  * Renders nothing until the button text and link exist in the CMS.
  */
@@ -33,7 +33,7 @@ const hasAction = !!(data?.buttonText && data?.buttonLink)
         </div>
         <div class="support__action">
           <CTA text={data?.buttonText} link={data?.buttonLink} />
-          <p class="support__note">You'll finish on our secure giving page.</p>
+          <p class="support__note">You can add an optional donation on the same page.</p>
         </div>
       </div>
     </section>

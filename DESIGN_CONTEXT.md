@@ -7,7 +7,7 @@ This document defines the product, design, content, CMS, and implementation cont
 
 # 1. Project Purpose
 
-The Universal Design Coalition website should be a **small, modern, durable, low-maintenance educational website** that explains Universal Design clearly, helps visitors find useful resources, supports fall-prevention collaboration, recognizes sponsors, and gives the organization a credible public presence.
+The Universal Design Coalition website should be a **small, modern, durable, low-maintenance educational website** that explains Universal Design clearly, helps visitors find useful resources, supports fall-prevention collaboration, recognizes members, and gives the organization a credible public presence.
 
 The site should not feel like a traditional nonprofit website full of nested pages, dated news posts, or administrative overhead.
 
@@ -134,7 +134,8 @@ The site is being structured around these primary content types:
 Site Settings
 Landing Page
 Resources
-Sponsors
+Resource Categories
+Members
 Events
 ```
 
@@ -169,7 +170,8 @@ Why It Matters
 Who It Helps
 Fall Prevention
 Resources Intro
-Sponsors Intro
+Members Intro
+Become a Member
 Closing / Contact CTA
 ```
 
@@ -200,23 +202,24 @@ Potential categories:
 - Community
 - Other
 
-## Sponsors
+## Members
 
-Sponsors are reusable documents.
+Members are reusable documents. (They began as Sponsors; the internal Sanity type name is still `sponsor`, but editors and visitors only see "Members".)
+
+Membership is a single tier: $100 per year, sold through Zeffy. Members are listed on the site with a name or logo and a link for the year their membership is valid, and may present at a monthly Zoom meeting.
 
 Expected fields include:
 
-- Organization Name
-- Logo
+- Member Name
+- Logo (optional)
 - Website URL
-- Sponsor Level
 - Optional Description
 - Active
-- Start Date
-- End Date
+- Member Since
+- Membership Ends
 - Sort Order
 
-Sponsor recognition should feel like **partnership acknowledgment**, not ad inventory.
+Member recognition should feel like **community acknowledgment**, not ad inventory.
 
 ## Events
 
@@ -249,7 +252,7 @@ The CMS must not become a second version of WordPress.
 - words
 - images
 - resources
-- sponsors
+- members
 - events
 - contact information
 - a few obvious content toggles
@@ -350,8 +353,9 @@ Recommended narrative:
 5. Practical examples / design principles
 6. Fall prevention
 7. Resources
-8. Sponsors / community partners
-9. Closing CTA / contact
+8. Members
+9. Become a member
+10. Closing CTA / contact
 ```
 
 The page should answer:
@@ -476,7 +480,7 @@ Cards are appropriate for:
 
 - resources
 - examples
-- sponsor tiers
+- member listings
 - event listings
 
 Do not turn every section into a card grid.
@@ -618,9 +622,9 @@ Only show future/current events:
 ]
 ```
 
-## Sponsors
+## Members
 
-If an end date exists, hide expired sponsors automatically.
+When a membership ends, hide the member automatically.
 
 Conceptually:
 
@@ -638,18 +642,17 @@ If content can become stale, design the schema so the system can handle that aut
 
 ---
 
-# 18. Sponsor Presentation
+# 18. Member Presentation
 
-Sponsors should be presented as supporters or community partners.
+Members should be presented as supporters and part of the community.
 
 Do not make the section look like an ad marketplace.
 
 Prefer language such as:
 
-- Our Sponsors
-- Community Partners
-- Supporting Organizations
-- Thank You to Our Partners
+- Our Members
+- Our Members & Partners
+- Thank You to Our Members
 
 Logo treatment should be visually consistent.
 
@@ -657,10 +660,12 @@ Avoid:
 
 - giant mismatched logos
 - rotating ad banners
-- flashing sponsor placements
-- overly promotional sponsor copy
+- flashing member placements
+- overly promotional member copy
 
-Sponsor levels can influence size or placement, but the section should remain tasteful.
+All members are treated equally; the section should remain tasteful.
+
+The membership call to action ("Become a member") sits directly after the members list, so visitors see who is involved before being asked to join. Donations are an optional add-on on the same Zeffy page, so there is no separate donate button.
 
 ---
 
@@ -699,7 +704,7 @@ src/components/
 ├── SectionIntro.astro
 ├── ContentSection.astro
 ├── ResourceCard.astro
-├── SponsorLogo.astro
+├── MemberGroup.astro
 ├── EventCard.astro
 ├── CTA.astro
 └── Container.astro
@@ -907,7 +912,7 @@ Do not:
 - add heavy JavaScript frameworks without need
 - turn Universal Design into an “elderly care” brand
 - make the site feel medical
-- make sponsor content feel like advertising
+- make member content feel like advertising
 - leave old events permanently visible
 - add animations for novelty
 - overuse cards
@@ -968,7 +973,7 @@ When making changes:
 
 - query only published content
 - respect `active` states
-- automatically exclude stale events/sponsors where applicable
+- automatically exclude stale events and expired memberships where applicable
 - define explicit sort order
 
 ## Before finishing a change

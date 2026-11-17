@@ -33,12 +33,21 @@ const settings = await sanityClient.fetch(`
   }
 `)
 
-// The header only offers a Donate link when the landing page's donate section
-// has a button to land on.
-const hasSupport = await sanityClient.fetch(`
-  defined(*[_type == "landingPage"][0].support.buttonText) &&
-  defined(*[_type == "landingPage"][0].support.buttonLink)
-`)
+// The header's Membership link lands on the members list when there is one,
+// otherwise on the "become a member" panel, and is hidden when neither shows.
+const membership = await sanityClient.fetch(
+  `{
+    "hasMembers": count(*[_type == "sponsor" && active == true && (!defined(endDate) || endDate >= $today)]) > 0,
+    "hasJoin": defined(*[_type == "landingPage"][0].support.buttonText) &&
+      defined(*[_type == "landingPage"][0].support.buttonLink)
+  }`,
+  { today: new Date().toISOString().slice(0, 10) }
+)
+const membershipHref = membership.hasMembers
+  ? '#members'
+  : membership.hasJoin
+    ? '#support'
+    : undefined
 
 const orgName = settings?.organizationName ?? 'Universal Design Coalition'
 const pageTitle = title
@@ -106,7 +115,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url).href
         <TextSize />
       </div>
     </div>
-    <Header settings={settings} showDonate={hasSupport} />
+    <Header settings={settings} membershipHref={membershipHref} />
     <main id="main">
       <slot />
     </main>

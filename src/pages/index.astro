@@ -7,14 +7,14 @@
  *   EditorialHero → AudienceBand → What is UD (statement) →
  *   Why it matters (soft panel) → Who it helps (image split) →
  *   Benefits (light strip) → Fall prevention (three-panel band) →
- *   In practice (lead + example grid) → Events → Resources → Sponsors →
- *   Support (pale sage donate panel) →
+ *   In practice (lead + example grid) → Events → Resources → Members →
+ *   Support (pale sage membership panel) →
  *   Closing CTA (deep-green finale).
  *
  * Every section is modular and degrades gracefully when its CMS content is
  * missing, so sections can be added, removed, or reordered without a redesign.
  * Queries request only published, `active` content and exclude stale events
- * and expired sponsors.
+ * and expired memberships.
  */
 import { sanityClient } from 'sanity:client'
 import Layout from '../layouts/Layout.astro'
@@ -26,14 +26,14 @@ import PreventionBand from '../components/PreventionBand.astro'
 import PracticeExample from '../components/PracticeExample.astro'
 import EventCard from '../components/EventCard.astro'
 import ResourcePreview from '../components/ResourcePreview.astro'
-import SponsorGroup from '../components/SponsorGroup.astro'
+import MemberGroup from '../components/MemberGroup.astro'
 import SupportBand from '../components/SupportBand.astro'
 import ClosingCTA from '../components/ClosingCTA.astro'
 
 const now = new Date().toISOString()
 const today = now.slice(0, 10)
 
-const [page, resources, sponsors, events] = await Promise.all([
+const [page, resources, members, events] = await Promise.all([
   sanityClient.fetch(`
     *[_type == "landingPage"][0]{
       hero,
@@ -56,10 +56,11 @@ const [page, resources, sponsors, events] = await Promise.all([
         title, description, "category": category->title, url, featured, sortOrder
       }
   `),
+  // Members are stored as `sponsor` documents; expired memberships drop off.
   sanityClient.fetch(
     `*[_type == "sponsor" && active == true && (!defined(endDate) || endDate >= $today)]
       | order(sortOrder asc, name asc){
-        name, logo, url, description, level
+        name, logo, url, description
       }`,
     { today }
   ),
@@ -80,20 +81,6 @@ const spaces = (inPractice?.spaces ?? []).filter((s: any) => s?.name)
 const RESOURCE_LIMIT = 6
 const featuredResources = resources.slice(0, RESOURCE_LIMIT)
 const hasMoreResources = resources.length > RESOURCE_LIMIT
-
-// Group sponsors by level when levels are in use; otherwise a single flat group.
-const SPONSOR_LEVELS = [
-  { value: 'presenting', label: 'Presenting Sponsor', prominent: true },
-  { value: 'supporting', label: 'Supporting Sponsors', prominent: false },
-  { value: 'community-partner', label: 'Community Partners', prominent: false },
-]
-const sponsorGroups = SPONSOR_LEVELS.map((level) => ({
-  ...level,
-  items: sponsors.filter((s: any) => s.level === level.value),
-})).filter((group) => group.items.length > 0)
-const ungroupedSponsors = sponsors.filter(
-  (s: any) => !SPONSOR_LEVELS.some((l) => l.value === s.level)
-)
 ---
 
 <Layout>
@@ -194,12 +181,12 @@ const ungroupedSponsors = sponsors.filter(
     </div>
   </section>
 
-  {sponsors.length > 0 && (
-    <section id="sponsors" class="listing">
+  {members.length > 0 && (
+    <section id="members" class="listing">
       <div class="listing__inner section-shell">
         <header class="listing__header">
           <h2 class="display listing__heading">
-            {page?.sponsorsIntro?.heading ?? 'Our partners make it possible'}
+            {page?.sponsorsIntro?.heading ?? 'Our members'}
           </h2>
           <span class="accent-rule"></span>
           {page?.sponsorsIntro?.body && (
@@ -207,15 +194,7 @@ const ungroupedSponsors = sponsors.filter(
           )}
         </header>
 
-        {sponsorGroups.map((group) => (
-          <SponsorGroup label={group.label} items={group.items} prominent={group.prominent} />
-        ))}
-        {ungroupedSponsors.length > 0 && (
-          <SponsorGroup
-            label={sponsorGroups.length > 0 ? 'More partners' : undefined}
-            items={ungroupedSponsors}
-          />
-        )}
+        <MemberGroup items={members} />
       </div>
     </section>
   )}
@@ -269,7 +248,7 @@ const ungroupedSponsors = sponsors.filter(
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
   }
 
-  /* ---- Listing section (events, resources, sponsors) ---- */
+  /* ---- Listing section (events, resources, members) ---- */
   .listing {
     padding-block: var(--space-2xl);
   }

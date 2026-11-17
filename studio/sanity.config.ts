@@ -41,7 +41,7 @@ export default defineConfig({
 
             S.divider(),
 
-            // Everything else (Resources, Sponsors, Events) as normal lists,
+            // Everything else (Resources, Members, Events) as normal lists,
             // minus the singletons handled above.
             ...S.documentTypeListItems().filter(
               (listItem) => !singletonTypes.has(listItem.getId() as string),

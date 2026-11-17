@@ -1,15 +1,22 @@
 import {defineField, defineType} from 'sanity'
 
+/**
+ * Members — people, businesses and organizations listed on the site for the
+ * year they hold a membership. The internal type name stays `sponsor` (these
+ * documents began as sponsors, and Sanity can't change a document's type in
+ * place); editors and visitors only ever see "Members".
+ */
 export const sponsor = defineType({
   name: 'sponsor',
-  title: 'Sponsors',
+  title: 'Members',
   type: 'document',
 
   fields: [
     defineField({
       name: 'name',
-      title: 'Organization Name',
+      title: 'Member Name',
       type: 'string',
+      description: 'A person, business or organization.',
       validation: (Rule) => Rule.required(),
     }),
 
@@ -17,6 +24,7 @@ export const sponsor = defineType({
       name: 'logo',
       title: 'Logo',
       type: 'image',
+      description: 'Optional. Without a logo, the name is shown instead.',
       options: {
         hotspot: true,
       },
@@ -26,23 +34,11 @@ export const sponsor = defineType({
       name: 'url',
       title: 'Website URL',
       type: 'url',
+      description: 'Optional. The name or logo links here.',
       validation: (Rule) =>
         Rule.uri({
           scheme: ['http', 'https'],
         }),
-    }),
-
-    defineField({
-      name: 'level',
-      title: 'Sponsor Level',
-      type: 'string',
-      options: {
-        list: [
-          {title: 'Presenting', value: 'presenting'},
-          {title: 'Supporting', value: 'supporting'},
-          {title: 'Community Partner', value: 'community-partner'},
-        ],
-      },
     }),
 
     defineField({
@@ -61,15 +57,16 @@ export const sponsor = defineType({
 
     defineField({
       name: 'startDate',
-      title: 'Start Date',
+      title: 'Member Since',
       type: 'date',
     }),
 
     defineField({
       name: 'endDate',
-      title: 'End Date',
+      title: 'Membership Ends',
       type: 'date',
-      description: 'Optional. Use this if sponsor recognition should expire automatically.',
+      description:
+        'Use the "valid until" date from Zeffy. The member is removed from the site after this date.',
     }),
 
     defineField({
@@ -84,14 +81,16 @@ export const sponsor = defineType({
     select: {
       title: 'name',
       media: 'logo',
-      level: 'level',
+      endDate: 'endDate',
       active: 'active',
     },
-    prepare({title, media, level, active}) {
+    prepare({title, media, endDate, active}) {
       return {
         title,
         media,
-        subtitle: `${level || 'Sponsor'}${active === false ? ' • Inactive' : ''}`,
+        subtitle: `${endDate ? `Member until ${endDate}` : 'Member'}${
+          active === false ? ' • Inactive' : ''
+        }`,
       }
     },
   },

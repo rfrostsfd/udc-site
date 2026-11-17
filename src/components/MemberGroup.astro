@@ -1,46 +1,42 @@
 ---
 /**
- * One tier of sponsors/partners: a small tier label and a clean, borderless row
- * of logos normalized to a consistent visual height with `object-fit: contain`,
- * so mixed aspect ratios read as one tidy set. Logos link out when a URL
- * exists and fall back to the organization name when no logo is uploaded.
- * `prominent` gives the presenting tier a larger logo size.
+ * The members grid: consistent cards with logos normalized to one visual
+ * height with `object-fit: contain`, so mixed aspect ratios read as one tidy
+ * set. Cards link out when a URL exists and fall back to the member's name
+ * when no logo is uploaded. Recognition, not advertising.
  */
 import { urlFor } from '../lib/sanity'
 
-interface Sponsor {
+interface Member {
   name?: string
   logo?: { asset?: unknown }
   url?: string
 }
 interface Props {
-  label?: string
-  items: Sponsor[]
-  prominent?: boolean
+  items: Member[]
 }
 
-const { label, items, prominent = false } = Astro.props
-const sponsors = (items ?? []).filter(Boolean)
+const { items } = Astro.props
+const members = (items ?? []).filter(Boolean)
 
-function logoUrl(sponsor: Sponsor): string | null {
-  return sponsor.logo?.asset
-    ? urlFor(sponsor.logo).width(600).fit('max').auto('format').url()
+function logoUrl(member: Member): string | null {
+  return member.logo?.asset
+    ? urlFor(member.logo).width(600).fit('max').auto('format').url()
     : null
 }
 ---
 
 {
-  sponsors.length > 0 && (
-    <div class:list={['group', prominent && 'group--prominent']}>
-      {label && <p class="group__label">{label}</p>}
+  members.length > 0 && (
+    <div class="group">
       <ul class="group__logos">
-        {sponsors.map((sponsor) => {
-          const url = logoUrl(sponsor)
-          const name = sponsor.name ?? 'Partner'
+        {members.map((member) => {
+          const url = logoUrl(member)
+          const name = member.name ?? 'Member'
           return (
             <li class="group__item">
-              {sponsor.url ? (
-                <a href={sponsor.url} target="_blank" rel="noopener noreferrer" class="group__link">
+              {member.url ? (
+                <a href={member.url} target="_blank" rel="noopener noreferrer" class="group__link">
                   {url ? (
                     <img src={url} alt={name} loading="lazy" decoding="async" />
                   ) : (
@@ -62,19 +58,6 @@ function logoUrl(sponsor: Sponsor): string | null {
 }
 
 <style>
-  .group + .group {
-    margin-top: var(--space-xl);
-  }
-
-  .group__label {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--color-muted);
-    margin: 0 0 var(--space-md);
-  }
-
   .group__logos {
     list-style: none;
     margin: 0;
@@ -117,13 +100,6 @@ function logoUrl(sponsor: Sponsor): string | null {
     width: auto;
     height: auto;
     object-fit: contain;
-  }
-  /* Presenting tier gets a taller card and larger logo. */
-  .group--prominent .group__item {
-    min-height: 8rem;
-  }
-  .group--prominent .group__item img {
-    max-height: 4.5rem;
   }
 
   .group__name {

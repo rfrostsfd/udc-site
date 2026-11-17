@@ -468,7 +468,7 @@ export const landingPage = defineType({
 
     defineField({
       name: 'sponsorsIntro',
-      title: 'Sponsors Section',
+      title: 'Members Section',
       type: 'object',
       options: {collapsible: true, collapsed: true},
       fields: [
@@ -492,7 +492,7 @@ export const landingPage = defineType({
       type: 'object',
       options: {collapsible: true, collapsed: true},
       description:
-        'Invites visitors to donate or join. Shown after the sponsors, with one button that opens the giving page. The section stays hidden until the button text and link are filled in.',
+        'Invites visitors to become a member. Shown after the members list, with one button that opens the giving page. The section stays hidden until the button text and link are filled in.',
       fields: [
         defineField({
           name: 'heading',
