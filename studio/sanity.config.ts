@@ -9,7 +9,7 @@ import {schemaTypes} from './schemaTypes'
  * "create new" menu, and stripped of create/delete/duplicate actions so an
  * editor can only edit the one document.
  */
-const singletonTypes = new Set(['siteSettings', 'landingPage'])
+const singletonTypes = new Set(['siteSettings', 'landingPage', 'resourcesPage'])
 const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
 
 export default defineConfig({
@@ -37,6 +37,12 @@ export default defineConfig({
               .id('landingPage')
               .child(
                 S.document().schemaType('landingPage').documentId('landingPage'),
+              ),
+            S.listItem()
+              .title('Resources Page')
+              .id('resourcesPage')
+              .child(
+                S.document().schemaType('resourcesPage').documentId('resourcesPage'),
               ),
 
             S.divider(),

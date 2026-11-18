@@ -8,33 +8,39 @@ import { sanityClient } from 'sanity:client'
 import Layout from '../layouts/Layout.astro'
 import ResourceCard from '../components/ResourceCard.astro'
 
-const resources = await sanityClient.fetch(`
-  *[_type == "resource" && active == true]
-    | order(sortOrder asc, featured desc, title asc){
-      title,
-      description,
-      "category": category->title,
-      url,
-      featured,
-      sortOrder
-    }
-`)
+const [page, resources] = await Promise.all([
+  sanityClient.fetch(`*[_type == "resourcesPage"][0]{heading, intro, seoDescription}`),
+  sanityClient.fetch(`
+    *[_type == "resource" && active == true]
+      | order(sortOrder asc, featured desc, title asc){
+        title,
+        description,
+        "category": category->title,
+        url,
+        featured,
+        sortOrder
+      }
+  `),
+])
+
+// Editable in the Studio's "Resources Page"; these defaults cover an empty CMS.
+const heading = page?.heading || 'Resources'
+const intro =
+  page?.intro ??
+  'Trusted organizations and references on Universal Design, home modification, and fall prevention — across the SunCoast and beyond. Each link opens an outside resource.'
+const description =
+  page?.seoDescription ||
+  page?.intro ||
+  'Trusted organizations and references on Universal Design, home modification, and fall prevention across the SunCoast and beyond.'
 ---
 
-<Layout
-  title="Resources"
-  description="Trusted organizations and references on Universal Design, home modification, and fall prevention across the SunCoast and beyond."
->
+<Layout title={heading} description={description}>
   <section class="resources-page">
     <div class="resources-page__inner">
       <p class="resources-page__back"><a href="/">← Back to home</a></p>
       <header class="resources-page__header">
-        <h1>Resources</h1>
-        <p class="resources-page__intro">
-          Trusted organizations and references on Universal Design, home
-          modification, and fall prevention — across the SunCoast and beyond.
-          Each link opens an outside resource.
-        </p>
+        <h1>{heading}</h1>
+        {intro && <p class="resources-page__intro">{intro}</p>}
       </header>
 
       {resources.length > 0 ? (

@@ -1,6 +1,7 @@
 import {imageWithAlt} from './imageWithAlt'
 import {siteSettings} from './siteSettings'
 import {landingPage} from './landingPage'
+import {resourcesPage} from './resourcesPage'
 import {resource} from './resource'
 import {resourceCategory} from './resourceCategory'
 import {sponsor} from './sponsor'
@@ -12,6 +13,7 @@ export const schemaTypes = [
   // Documents
   siteSettings,
   landingPage,
+  resourcesPage,
   resource,
   resourceCategory,
   sponsor,
