@@ -392,10 +392,13 @@ export const landingPage = defineType({
                   type: 'string',
                   validation: (Rule) => Rule.required(),
                 }),
+                // No longer shown on the site; hidden rather than removed so the
+                // existing values don't surface as unknown fields in the Studio.
                 defineField({
                   name: 'iconKey',
                   title: 'Icon (optional)',
                   type: 'string',
+                  hidden: true,
                   options: {
                     list: [
                       {title: 'Kitchen', value: 'kitchen'},

@@ -1,21 +1,19 @@
 ---
 /**
  * A single "in practice" example (Kitchen, Bath, Whole Home, …). Imagery is the
- * dominant element: a rounded photo with a small circular icon badge, then a
- * name, an optional short description, and concrete feature bullets.
+ * dominant element: a rounded photo, then a name, an optional short
+ * description, and concrete feature bullets.
  *
  * Everything but the name is optional:
- *   - no image → the icon badge stands in, the card still reads cleanly
+ *   - no image → a soft tinted panel stands in, the card still reads cleanly
  *   - no features → just image + description
  * The section can hold any number of examples; the grid adapts.
  */
 import { urlFor } from '../lib/sanity'
-import Icon from './Icon.astro'
 
 interface Props {
   space: {
     name?: string
-    iconKey?: string
     image?: { asset?: unknown; alt?: string }
     description?: string
     features?: string[]
@@ -37,9 +35,6 @@ const link = space.link
       <img src={imageUrl} alt={space.image?.alt ?? ''} width="760" height="560" loading="lazy" decoding="async" />
     ) : (
       <div class="practice__media-fallback" aria-hidden="true"></div>
-    )}
-    {space.iconKey && (
-      <span class="practice__badge" aria-hidden="true"><Icon name={space.iconKey} size={26} /></span>
     )}
   </div>
 
@@ -79,21 +74,6 @@ const link = space.link
   }
   .practice__media-fallback {
     background: linear-gradient(135deg, var(--color-sage-soft), var(--color-bg-alt));
-  }
-
-  .practice__badge {
-    position: absolute;
-    left: var(--space-md);
-    top: var(--space-md);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    background-color: var(--color-surface);
-    color: var(--color-green);
-    box-shadow: var(--shadow-soft);
   }
 
   .practice__name {
