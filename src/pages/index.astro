@@ -75,6 +75,9 @@ const [page, resources, members, events] = await Promise.all([
 
 const inPractice = page?.inPractice
 const spaces = (inPractice?.spaces ?? []).filter((s: any) => s?.name)
+// Most cards per row: four spaces read best as two rows of two; any other
+// count fills rows of up to three.
+const practiceColumns = spaces.length === 4 ? 2 : 3
 
 // Landing page shows a small set of priority resources (featured first); the
 // rest live on a future /resources page.
@@ -128,7 +131,10 @@ const hasMoreResources = resources.length > RESOURCE_LIMIT
           <span class="accent-rule"></span>
           {inPractice?.intro && <p class="feature__text">{inPractice.intro}</p>}
         </div>
-        <div class="feature__grid feature__grid--practice">
+        <div
+          class="feature__grid feature__grid--practice"
+          style={`--practice-cols: ${practiceColumns}`}
+        >
           {spaces.map((space: any) => (
             <PracticeExample space={space} />
           ))}
@@ -237,8 +243,22 @@ const hasMoreResources = resources.length > RESOURCE_LIMIT
     display: grid;
     gap: var(--space-xl) var(--space-lg);
   }
+  /* Up to --practice-cols cards per row (never narrower than 15rem), so
+     cards wrap into even rows instead of leaving a lone card. */
   .feature__grid--practice {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(
+        min(
+          100%,
+          max(
+            15rem,
+            (100% - (var(--practice-cols) - 1) * var(--space-lg)) / var(--practice-cols)
+          )
+        ),
+        1fr
+      )
+    );
   }
   .feature__grid--events {
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
